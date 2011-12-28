@@ -17,4 +17,7 @@ public interface CinemaImporter {
 	//TODO: osetrit dotaz mimo znamy program
 	List<ShowingImport> getShowingsFor( LocalDate date ) throws PageScrapingException;
 	
+	// pozdeji
+	//List<ShowingImport> getShowingsIn( Interval interval ) throws PageScrapingException;
+
 }

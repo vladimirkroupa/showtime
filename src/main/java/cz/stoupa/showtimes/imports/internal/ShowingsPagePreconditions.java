@@ -1,6 +1,8 @@
-package cz.stoupa.showtimes.imports;
+package cz.stoupa.showtimes.imports.internal;
 
-public class Preconditions {
+import cz.stoupa.showtimes.imports.PageScrapingException;
+
+public class ShowingsPagePreconditions {
 
 	//TODO: javadoc podle guavy
 	public static void checkPageStructure( Boolean condition ) throws PageScrapingException {
@@ -11,4 +13,4 @@ public class Preconditions {
 		}
 	}
 
-}
+}	

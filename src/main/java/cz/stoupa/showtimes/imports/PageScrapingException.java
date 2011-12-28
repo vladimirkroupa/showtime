@@ -1,6 +1,6 @@
 package cz.stoupa.showtimes.imports;
 
-class PageScrapingException extends Exception {
+public class PageScrapingException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

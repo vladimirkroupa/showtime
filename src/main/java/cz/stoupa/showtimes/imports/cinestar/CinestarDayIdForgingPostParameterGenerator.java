@@ -3,13 +3,12 @@ package cz.stoupa.showtimes.imports.cinestar;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Instant;
 import org.joda.time.LocalDate;
 
 import com.google.common.collect.Maps;
 
-import cz.stoupa.showtimes.imports.internal.PostParamsGenerator;
+import cz.stoupa.showtimes.imports.internal.fetcher.PostParamsGenerator;
 
 /**
  * Generator for creating POST request parameters for Cinestar showing page.
@@ -22,9 +21,6 @@ import cz.stoupa.showtimes.imports.internal.PostParamsGenerator;
 public class CinestarDayIdForgingPostParameterGenerator implements PostParamsGenerator {
 
 	public static final String DAY_ID_KEY = "datum";
-	
-	// FIXME: temporary design flaw
-	private static final DateTimeZone commonTimeZone = DateTimeZone.forID( "Europe/Prague" );
 	
 	@Override
 	public Map<String, String> prepareParams( LocalDate date ) {
@@ -41,7 +37,7 @@ public class CinestarDayIdForgingPostParameterGenerator implements PostParamsGen
 	}
 	
 	private Instant createDayStartInstant( LocalDate date ) {
-		DateTime dayStart = date.toDateTimeAtStartOfDay( commonTimeZone );
+		DateTime dayStart = date.toDateTimeAtStartOfDay( CinestarImporter.commonTimeZone );
 		return dayStart.toInstant();
 	}
 	

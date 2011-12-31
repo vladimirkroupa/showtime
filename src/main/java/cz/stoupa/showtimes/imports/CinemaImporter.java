@@ -11,11 +11,11 @@ public interface CinemaImporter {
 	 * 
 	 * @param date date of showing
 	 * @return
-	 * @throws PageScrapingException
+	 * @throws PageStructureException
 	 */
 	//TODO: pagescrapingexception je moc konkretni
 	//TODO: osetrit dotaz mimo znamy program
-	List<ShowingImport> getShowingsFor( LocalDate date ) throws PageScrapingException;
+	List<ShowingImport> getShowingsFor( LocalDate date ) throws PageStructureException;
 	
 	// pozdeji
 	//List<ShowingImport> getShowingsIn( Interval interval ) throws PageScrapingException;

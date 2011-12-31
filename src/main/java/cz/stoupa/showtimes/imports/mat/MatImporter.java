@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 
 import cz.stoupa.showtimes.imports.CinemaImporter;
-import cz.stoupa.showtimes.imports.PageScrapingException;
+import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
-import cz.stoupa.showtimes.imports.internal.ShowingsPagePreconditions;
+import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 public class MatImporter implements CinemaImporter {
@@ -29,7 +29,7 @@ public class MatImporter implements CinemaImporter {
 	
 	private static final String URL_BASE = "http://www.mat.cz/matclub/cz/kino/mesicni-program?from=";
 	
-	public List<ShowingImport> getShowingsFor( LocalDate aDate ) throws PageScrapingException {
+	public List<ShowingImport> getShowingsFor( LocalDate aDate ) throws PageStructureException {
 		
 		List<ShowingImport> showings = Lists.newArrayListWithExpectedSize( 2 );
 		
@@ -39,7 +39,7 @@ public class MatImporter implements CinemaImporter {
 		try {
 			page = getDocument( url );
 		} catch( IOException ioe ) {
-			throw new PageScrapingException( ioe );
+			throw new PageStructureException( ioe );
 		}
 		
 		// ziska vsechny "kalendare"
@@ -51,7 +51,7 @@ public class MatImporter implements CinemaImporter {
 		if ( ! showingDate.equals( aDate ) ) {
 			String msg = String.format( "Requested showing date %s not found on page.", aDate );
 			logger.error( msg );
-			throw new PageScrapingException( msg );
+			throw new PageStructureException( msg );
 		}
 
 		// zpracovat 1. promitani
@@ -71,18 +71,18 @@ public class MatImporter implements CinemaImporter {
 		return showings;
 	}
 	
-	private ShowingImport parseShowing( Element movieTable, LocalDate date ) throws PageScrapingException {
+	private ShowingImport parseShowing( Element movieTable, LocalDate date ) throws PageStructureException {
 		
-		Element tr = assertSingleElement( movieTable.getElementsByTag( "tr ") );
+		Element tr = PageStructurePreconditions.assertSingleElement( movieTable.getElementsByTag( "tr ") );
 		Elements movieCols = tr.children();
-		ShowingsPagePreconditions.checkPageStructure( movieCols.size() == 6 || movieCols.size() == 1 );
+		PageStructurePreconditions.checkPageStructure( movieCols.size() == 6 || movieCols.size() == 1 );
 		// fuj
 		if ( movieCols.size() == 1 ) {
 			String text = tr.text();
 			if ( text.contains( "KINO NEHRAJE" ) ) {
 				return null;
 			} else {
-				throw new PageScrapingException( "Unexpected page structure" );
+				throw new PageStructureException( "Unexpected page structure" );
 			}
 		}
 		
@@ -96,12 +96,12 @@ public class MatImporter implements CinemaImporter {
 		return new ShowingImport( showingDateTime, movieTitle );
 	}
 		
-	private String parseMovieTitle( Element namesCol ) throws PageScrapingException {
+	private String parseMovieTitle( Element namesCol ) throws PageStructureException {
 		
-		Element czechName = assertSingleElement( namesCol.getElementsByTag( "h4 ") );
+		Element czechName = PageStructurePreconditions.assertSingleElement( namesCol.getElementsByTag( "h4 ") );
 		//Element origName = assertSingleElement( namesCol.getElementsByTag( "h5 ") );
 		String result = czechName.text();
-		ShowingsPagePreconditions.checkPageStructure( !result.isEmpty() );
+		PageStructurePreconditions.checkPageStructure( !result.isEmpty() );
 		return result;
 	}
 	
@@ -120,13 +120,6 @@ public class MatImporter implements CinemaImporter {
 		String urlBase = URL_BASE;
 		String url = urlBase + dateStr;
 		return url;
-	}
-
-	// hodilo by se v CinemaParserBase
-	private static Element assertSingleElement( Elements element ) throws PageScrapingException {
-		
-		ShowingsPagePreconditions.checkPageStructure( element.size() == 1 );
-		return element.get( 0 );
 	}
 	
 }

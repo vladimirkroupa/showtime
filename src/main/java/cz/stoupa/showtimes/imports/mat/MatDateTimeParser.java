@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
-import cz.stoupa.showtimes.imports.PageScrapingException;
+import cz.stoupa.showtimes.imports.PageStructureException;
 
 /**
- * Methods for parsing dates and times on MAT showing page.
+ * Parses date and time formats on MAT showing page.
  * 
  * @author stoupa
  */
@@ -27,9 +27,9 @@ public class MatDateTimeParser {
 	 * Parses showing date from the header text.
 	 * 
 	 * @param year year of the date
-	 * @throws PageScrapingException if the date string does not conform to the expected format
+	 * @throws PageStructureException if the date string does not conform to the expected format
 	 */
-	public static LocalDate parseShowingDate( String date, int year ) throws PageScrapingException {
+	public static LocalDate parseShowingDate( String date, int year ) throws PageStructureException {
 		Preconditions.checkNotNull( date );
 		
 		LocalDate showingDate;
@@ -39,24 +39,24 @@ public class MatDateTimeParser {
 			showingDate = LocalDate.parse( dateWODayOfWeek, matDTF );
 		} catch ( IllegalArgumentException iae ) {
 			logger.error( "Could not parse MAT date {}, expected format [{}].", date, DATE_FORMAT );
-			throw new PageScrapingException( iae.getMessage(), iae );
+			throw new PageStructureException( iae );
 		}
-		return showingDate.withYear(year);
+		return showingDate.withYear( year );
 	}
 	
 	private static String removeDayOfWeek( String date ) {
 		String trimmed = date.trim();
-		int firstSpaceIndex = trimmed.indexOf(' ');
+		int firstSpaceIndex = trimmed.indexOf( ' ' );
 		return trimmed.substring( firstSpaceIndex + 1 );
 	}
 
-	public static LocalTime parseShowingTime( String time ) throws PageScrapingException {
+	public static LocalTime parseShowingTime( String time ) throws PageStructureException {
 		
 		try {
 			return LocalTime.parse( time, DateTimeFormat.forPattern( TIME_FORMAT ) );
 		} catch ( IllegalArgumentException iae ) {
 			logger.error( "Could not parse showing time {}, expected format [{}].", time, TIME_FORMAT );
-			throw new PageScrapingException( iae );
+			throw new PageStructureException( iae );
 		}
 	}
 	

@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import cz.stoupa.showtimes.imports.PageScrapingException;
+import cz.stoupa.showtimes.imports.PageStructureException;
 
 /**
  * @author stoupa
@@ -14,14 +14,14 @@ import cz.stoupa.showtimes.imports.PageScrapingException;
 public class MatDateTimeParserTest {
 
 	@Test
-	public void basicDate() throws PageScrapingException {
+	public void basicDate() throws PageStructureException {
 		LocalDate expected = new LocalDate(2011, 12, 27);
 		LocalDate actual = MatDateTimeParser.parseShowingDate("úterý 27. 12.", 2011);
 		Assert.assertEquals(expected, actual);
 	}
 	
 	@Test
-	public void singleDigitDayDate() throws PageScrapingException {
+	public void singleDigitDayDate() throws PageStructureException {
 		LocalDate expected = new LocalDate(2011, 12, 9);
 		LocalDate actual = MatDateTimeParser.parseShowingDate("pátek 9. 12.", 2011);
 		Assert.assertEquals(expected, actual);

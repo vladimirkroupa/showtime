@@ -9,16 +9,14 @@ repositories {
 
 dependencies {
 
-   	compile 'com.google.guava:guava:11.0'
-    compile 'joda-time:joda-time:2.0'
+   	compile 'com.google.guava:guava:13.+'
+    compile 'joda-time:joda-time:2.+'
 
 	compile 'org.slf4j:slf4j-api:1.6.+'
   	compile 'ch.qos.logback:logback-classic:1.0.0'            
 
-	compile 'org.springframework:spring-core:3.1.0.RELEASE'
-
-    compile 'org.jsoup:jsoup:1.6.1'
-
+    compile 'org.jsoup:jsoup:1.6.+'
+    
     testCompile 'junit:junit:4.8.+'
     
 }

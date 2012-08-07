@@ -2,6 +2,7 @@ package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -14,9 +15,9 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.collect.Sets;
+import com.google.common.io.Resources;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 
@@ -65,13 +66,14 @@ public class KnownDatesScannerTest {
 		}
 
 		@Override
-		public Response serve( String uri, String method, Properties header,
+		public Response serve( String uri, String method, Properties header, 
 				Properties parms, Properties files ) {
 			
-			ClassPathResource responseResource = new ClassPathResource( "cinestarPage.html" );
+			URL responseResource = Resources.getResource( "cinestarPage.html" );
+			
 			InputStream resourceIs;
 			try {
-				resourceIs = responseResource.getInputStream();
+				resourceIs = responseResource.openStream();
 			} catch ( IOException ioe ) {
 				throw new RuntimeException( ioe );
 			}

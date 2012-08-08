@@ -18,6 +18,8 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 
@@ -25,9 +27,16 @@ import cz.stoupa.showtimes.imports.PageStructureException;
 public class KnownDatesScannerTest {
 
 	private static final int testPort = 8081;
-	private final KnownDatesScanner instance = new KnownDatesScanner( "http://localhost:8081" );
+	private final KnownDatesScanner instance;
 	private NanoHTTPD testServer;
+
+	private Injector injector = Guice.createInjector( new CinestarModule() );
 	
+	public KnownDatesScannerTest() {
+		CinestarDateTimeParser parser = injector.getInstance( CinestarDateTimeParser.class );
+		instance = new KnownDatesScanner( "http://localhost:8081", parser );
+	}
+
 	@Before
 	public void startServer() throws IOException {
 		testServer = new TestServer( testPort );

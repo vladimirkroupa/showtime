@@ -8,7 +8,6 @@ public class CinestarModule extends AbstractModule {
 	protected void configure() {
 		bind(CinestarPageScraper.class);
 		bind(CinestarDateTimeParser.class);
-		bind(KnownDatesScanner.class);
 	}
 	
 }

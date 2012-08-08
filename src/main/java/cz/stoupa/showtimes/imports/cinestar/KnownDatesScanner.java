@@ -11,7 +11,6 @@ import org.jsoup.select.Elements;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
@@ -28,7 +27,6 @@ public class KnownDatesScanner {
 	private final CinestarDateTimeParser dateTimeParser;
 	private final String dateOptionsPageUrl;
 	
-	@Inject
 	public KnownDatesScanner( String dateOptionsPageUrl, CinestarDateTimeParser dateTimeParser ) {
 		this.dateOptionsPageUrl = dateOptionsPageUrl;
 		this.dateTimeParser = dateTimeParser;

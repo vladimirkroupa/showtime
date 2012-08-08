@@ -2,6 +2,7 @@ package cz.stoupa.showtimes.imports.mat;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -29,6 +30,12 @@ public class MatImporter implements CinemaImporter {
 	
 	private static final String URL_BASE = "http://www.mat.cz/matclub/cz/kino/mesicni-program?from=";
 	
+	@Override
+	public Set<LocalDate> getDiscoverableShowingDates() throws IOException, PageStructureException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public List<ShowingImport> getShowingsFor( LocalDate aDate ) throws PageStructureException {
 		
 		List<ShowingImport> showings = Lists.newArrayListWithExpectedSize( 2 );

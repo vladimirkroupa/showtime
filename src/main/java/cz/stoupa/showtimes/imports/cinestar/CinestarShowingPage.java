@@ -1,6 +1,5 @@
 package cz.stoupa.showtimes.imports.cinestar;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +18,8 @@ public class CinestarShowingPage implements ShowingPage {
 
 	private static final Logger logger = LoggerFactory.getLogger( CinestarShowingPage.class );
 	
+	private final CinestarPageScraper pageScraper;
+	
 	private final Document page;
 	private final LocalDate forDate;
 	
@@ -27,9 +28,10 @@ public class CinestarShowingPage implements ShowingPage {
 	 * 
 	 * @param page
 	 */
-	public CinestarShowingPage( Document page, LocalDate forDate ) {
+	public CinestarShowingPage( Document page, LocalDate forDate, CinestarPageScraper pageScraper ) {
 		this.page = page;
 		this.forDate = forDate;
+		this.pageScraper = pageScraper;
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class CinestarShowingPage implements ShowingPage {
 	
 	@Override
 	public List<ShowingImport> getAllShowingsOnPage() throws PageStructureException {
-		return new CinestarPageScraper().extractAllShowings( page, forDate );
+		return pageScraper.extractAllShowings( page );
 	}
 
 	// TODO: return copy?

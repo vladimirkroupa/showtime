@@ -11,18 +11,27 @@ import org.jsoup.select.Elements;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 
-// vraci seznam dni, pro ktere je mozne prave ted zjistit program
+/**
+ * FIXME: vraci seznam dni, pro ktere je mozne prave ted zjistit program
+ * Stateles.
+ * 
+ * @author stoupa
+ */
 public class KnownDatesScanner {
 	
+	private final CinestarDateTimeParser dateTimeParser;
 	private final String dateOptionsPageUrl;
 	
-	public KnownDatesScanner( String dateOptionsPageUrl ) {
+	@Inject
+	public KnownDatesScanner( String dateOptionsPageUrl, CinestarDateTimeParser dateTimeParser ) {
 		this.dateOptionsPageUrl = dateOptionsPageUrl;
+		this.dateTimeParser = dateTimeParser;
 	}
 
 	public SortedSet<LocalDate> findKnownDates() throws IOException, PageStructureException {
@@ -37,7 +46,7 @@ public class KnownDatesScanner {
 		for ( Element opt : options ) {
 			optionsText.add( opt.text() );
 		}
-		List<LocalDate> result = new CinestarDateTimeParser().parseDateOptions( optionsText );
+		List<LocalDate> result = dateTimeParser.parseDateOptions( optionsText );
 		return result;
 	}
 	

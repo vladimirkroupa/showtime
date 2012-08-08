@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
@@ -22,35 +23,51 @@ import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.util.Indexes;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
+/**
+ * FIXME
+ * Stateless.  
+ * 
+ * @author stoupa
+ *
+ */
 public class CinestarPageScraper {
 
 	private static final Logger logger = LoggerFactory.getLogger( CinestarPageScraper.class );
+
+	private final CinestarDateTimeParser dateTimeParser;
 	
-	public List<ShowingImport> extractAllShowings( Document page, LocalDate forDate ) throws PageStructureException {
+	@Inject
+	public CinestarPageScraper( CinestarDateTimeParser dateTimeParser ) {
+		this.dateTimeParser = dateTimeParser;
+	}
+
+	public List<ShowingImport> extractAllShowings( Document page ) throws PageStructureException {
 		Elements showingRows = page.select( "table.table-program tbody tr:has(td.name)" );
 		if ( showingRows.isEmpty() ) {
-			logger.warn( "No Cinestar showing rows found on showing page for date {}", forDate );
+			// TODO: page.toString() ?
+			logger.warn( "No Cinestar showing rows found on showing page: " + page );
 		}
-		return parseShowingRows( showingRows, forDate );
+		return parseShowingRows( showingRows );
 	}
 	
-	private List<ShowingImport> parseShowingRows( Elements rows, LocalDate forDate ) throws PageStructureException {
+	private List<ShowingImport> parseShowingRows( Elements rows ) throws PageStructureException {
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( Element row : rows ) {
-			List<ShowingImport> rowShowings = parseSingleRow( row, forDate );
+			List<ShowingImport> rowShowings = parseSingleRow( row );
 			result.addAll( rowShowings );
 		}
 		return result;
 	}
 	
-	private List<ShowingImport> parseSingleRow( Element row, LocalDate forDate ) throws PageStructureException {
+	private List<ShowingImport> parseSingleRow( Element row ) throws PageStructureException {
 		String name = parseMovieName( row );
 		List<LocalTime> showingTimes = parseMovieShowingTimes( row );
 		Translation translation = parseMovieTranslation( row );
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( LocalTime time : showingTimes ) {
-			LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( forDate, time );
-			ShowingImport showing = new ShowingImport( dateTime, name, translation );
+			LocalDate showingDay = null; // FIXME
+			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
+			ShowingImport showing = new ShowingImport( when, name, translation );
 			result.add( showing );
 		}
 		return result;
@@ -77,7 +94,7 @@ public class CinestarPageScraper {
 		List<LocalTime> result = Lists.newArrayList();
 		for ( Element timeElem : timeElems ) {
 			// FIXME: DI
-			LocalTime showingTime = new CinestarDateTimeParser().parseShowingTime( timeElem.text() );
+			LocalTime showingTime = dateTimeParser.parseShowingTime( timeElem.text() );
 			result.add( showingTime );
 		}
 		return result;

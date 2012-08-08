@@ -20,5 +20,12 @@ dependencies {
     compile 'org.jsoup:jsoup:1.6.+'
     
     testCompile 'junit:junit:4.8.+'
-    
+
+	testCompile 'org.apache.wink:wink-component-test-support:1.2.0-incubating'    
+}
+
+eclipse {
+    classpath {
+       downloadSources=true
+    }
 }

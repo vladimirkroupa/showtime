@@ -18,7 +18,7 @@ public class CinestarPageFactoryTest {
 	
 	// TODO: pridat createPageFromSnaphost, extendovat http mock test case
 	
-	// FIXME: nestabilni test
+	// FIXME: nestabilni test a navic k nicemu
 	@Test
 	public void createPageForToday() throws IOException, PageStructureException {
 		LocalDate today = LocalDate.now();

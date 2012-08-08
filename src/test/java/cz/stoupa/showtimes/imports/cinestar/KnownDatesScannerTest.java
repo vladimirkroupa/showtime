@@ -1,21 +1,20 @@
 package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.SortedSet;
 
 import junit.framework.Assert;
-import nanohttpd.NanoHTTPD;
 
+import org.apache.wink.client.BaseTest;
+import org.apache.wink.client.MockHttpServer.MockHttpServerResponse;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import com.google.inject.Guice;
@@ -24,31 +23,28 @@ import com.google.inject.Injector;
 import cz.stoupa.showtimes.imports.PageStructureException;
 
 // FIXME: presunout do CinestarPageFactoryTest?
-public class KnownDatesScannerTest {
+public class KnownDatesScannerTest extends BaseTest {
 
-	private static final int testPort = 8081;
-	private final KnownDatesScanner instance;
-	private NanoHTTPD testServer;
+	private KnownDatesScanner instance;
 
 	private Injector injector = Guice.createInjector( new CinestarModule() );
 	
-	public KnownDatesScannerTest() {
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
 		CinestarDateTimeParser parser = injector.getInstance( CinestarDateTimeParser.class );
-		instance = new KnownDatesScanner( "http://localhost:8081", parser );
+		instance = new KnownDatesScanner( serviceURL, parser );
 	}
 
-	@Before
-	public void startServer() throws IOException {
-		testServer = new TestServer( testPort );
-	}
-	
-	@After
-	public void stopServer() {
-		testServer.stop();
-	}
-	
 	@Test
 	public void testPageSnapshot() throws IOException, PageStructureException {
+		MockHttpServerResponse response = new MockHttpServerResponse();
+		URL url = Resources.getResource( "cinestarPage.html" );
+		String content = Resources.toString( url, Charsets.UTF_8 );
+		response.setMockResponseContent( content );
+		
+		server.setMockHttpServerResponses( response );
+		
 		List<LocalDate> dates = Arrays.asList( 
 				new LocalDate( 2011, 12, 29 ),
 				new LocalDate( 2011, 12, 30 ),
@@ -67,26 +63,4 @@ public class KnownDatesScannerTest {
 		Assert.assertEquals( expected, actual );
 	}
 	
-	// TODO: zobecnit na MockHttpTestCase?
-	class TestServer extends NanoHTTPD {
-
-		public TestServer( int port ) throws IOException {
-			super( port, null );
-		}
-
-		@Override
-		public Response serve( String uri, String method, Properties header, 
-				Properties parms, Properties files ) {
-			
-			URL responseResource = Resources.getResource( "cinestarPage.html" );
-			
-			InputStream resourceIs;
-			try {
-				resourceIs = responseResource.openStream();
-			} catch ( IOException ioe ) {
-				throw new RuntimeException( ioe );
-			}
-			return new NanoHTTPD.Response( HTTP_OK, "text/html", resourceIs );
-		}
-	}
 }

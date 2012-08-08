@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
+import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 import cz.stoupa.showtimes.util.Indexes;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
@@ -47,25 +48,34 @@ public class CinestarPageScraper {
 			// TODO: page.toString() ?
 			logger.warn( "No Cinestar showing rows found on showing page: " + page );
 		}
-		return parseShowingRows( showingRows );
+		LocalDate showingDate = extractShowingsDate( page );
+		return parseShowingRows( showingRows, showingDate );
 	}
 	
-	private List<ShowingImport> parseShowingRows( Elements rows ) throws PageStructureException {
+	private LocalDate extractShowingsDate( Document page ) throws PageStructureException {
+		// TODO: DRY (structure), see KnownDatesScanner
+		Elements dateOpts = page.select( "html body div div div div div form p select option[selected]" );
+		PageStructurePreconditions.assertSingleElement( dateOpts );
+		LocalDate date = dateTimeParser.parseDateOption( dateOpts.text() );
+		return date;
+	}	
+	
+	private List<ShowingImport> parseShowingRows( Elements rows, LocalDate showingDate ) throws PageStructureException {
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( Element row : rows ) {
-			List<ShowingImport> rowShowings = parseSingleRow( row );
+			List<ShowingImport> rowShowings = parseSingleRow( row, showingDate );
 			result.addAll( rowShowings );
 		}
 		return result;
 	}
 	
-	private List<ShowingImport> parseSingleRow( Element row ) throws PageStructureException {
+	private List<ShowingImport> parseSingleRow( Element row, LocalDate showingDate ) throws PageStructureException {
 		String name = parseMovieName( row );
 		List<LocalTime> showingTimes = parseMovieShowingTimes( row );
 		Translation translation = parseMovieTranslation( row );
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( LocalTime time : showingTimes ) {
-			LocalDate showingDay = null; // FIXME
+			LocalDate showingDay = showingDate;
 			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
 			ShowingImport showing = new ShowingImport( when, name, translation );
 			result.add( showing );
@@ -93,7 +103,6 @@ public class CinestarPageScraper {
 		Elements timeElems = movieRow.select( "td.time.active" );
 		List<LocalTime> result = Lists.newArrayList();
 		for ( Element timeElem : timeElems ) {
-			// FIXME: DI
 			LocalTime showingTime = dateTimeParser.parseShowingTime( timeElem.text() );
 			result.add( showingTime );
 		}

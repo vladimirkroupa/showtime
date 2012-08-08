@@ -16,6 +16,7 @@ import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 
 /**
  * Parses date and time formats on Cinestar showing page.
+ * Stateless.
  * 
  * @author stoupa
  */

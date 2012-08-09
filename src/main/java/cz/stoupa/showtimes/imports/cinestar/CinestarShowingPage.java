@@ -62,10 +62,4 @@ public class CinestarShowingPage implements ShowingPage {
 		return pageScraper.extractAllShowings( page );
 	}
 
-	// TODO: return copy?
-	@Override
-	public Document getUnderlyingDocument() {
-		return page;
-	}
-	
 }

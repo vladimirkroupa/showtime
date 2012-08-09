@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
-import org.jsoup.nodes.Document;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
@@ -22,5 +21,4 @@ public interface ShowingPage {
 
 	List<ShowingImport> getAllShowingsOnPage() throws PageStructureException;
 
-	Document getUnderlyingDocument();
 }

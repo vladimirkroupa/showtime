@@ -21,9 +21,7 @@ public class PostRequestPageFetcher implements WebPageFetcher {
 	private PostParamsGenerator paramGenerator;
 	private UrlGenerator urlGenerator;
 	
-	public PostRequestPageFetcher(
-			UrlGenerator urlGenerator,
-			PostParamsGenerator paramGenerator ) {
+	public PostRequestPageFetcher( UrlGenerator urlGenerator, PostParamsGenerator paramGenerator ) {
 		this.paramGenerator = paramGenerator;
 		this.urlGenerator = urlGenerator;
 	}

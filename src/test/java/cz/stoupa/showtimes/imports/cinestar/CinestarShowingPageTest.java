@@ -2,6 +2,7 @@ package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.wink.client.BaseTest;
 import org.apache.wink.client.MockHttpServer.MockHttpServerResponse;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -47,7 +49,32 @@ public class CinestarShowingPageTest extends BaseTest {
 	}
 
 	@Test
+	public void getKnownShowingDates() throws PageStructureException {
+		Set<LocalDate> expected = Sets.newHashSet( PAGE_SAVED_ON );
+		Set<LocalDate> actual = testObject.getKnownShowingDates();
+		assertEquals( expected, actual );
+	}
+	
+	@Test
 	public void getAllShowingsOnPage() throws PageStructureException {
+		List<ShowingImport> actual = testObject.getAllShowingsOnPage();
+		assertEquals( expectedShowings(), actual );
+	}
+	
+	@Test
+	public void getShowingsForDate() throws PageStructureException {
+		List<ShowingImport> actual = testObject.getShowingsForDate( PAGE_SAVED_ON );
+		assertEquals( expectedShowings(), actual );
+	}
+	
+	@Test( expected = IllegalArgumentException.class )
+	public void getShowingsForDate_DifferentDate() throws PageStructureException {
+		List<ShowingImport> actual = testObject.getShowingsForDate( PAGE_SAVED_ON.plusDays( 1 ) );
+		List<ShowingImport> expected = Lists.newArrayList();
+		assertEquals( expected, actual );
+	}
+	
+	private List<ShowingImport> expectedShowings() {
 		List<ShowingImport> expected = Lists.newArrayList();
 		expected.add( create( "14:30", "Bez kalhot", Translation.SUBTITLES ) );
 		expected.add( create( "17:00", "Bez kalhot", Translation.SUBTITLES ) );
@@ -94,10 +121,7 @@ public class CinestarShowingPageTest extends BaseTest {
 		expected.add( create( "20:00", "Bourneův odkaz GC", Translation.SUBTITLES ) );
 		expected.add( create( "17:00", "Temný rytíř povstal GC", Translation.SUBTITLES ) );
 		expected.add( create( "21:00", "Temný rytíř povstal GC", Translation.SUBTITLES ) );
-		
-		List<ShowingImport> actual = testObject.getAllShowingsOnPage();
-		
-		assertEquals( expected, actual );
+		return expected;
 	}
 	
 	private ShowingImport create( String time, String movieName, Translation translation ) {

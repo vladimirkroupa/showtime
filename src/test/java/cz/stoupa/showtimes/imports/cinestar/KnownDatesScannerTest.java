@@ -1,7 +1,6 @@
 package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
@@ -13,16 +12,17 @@ import org.apache.wink.client.MockHttpServer.MockHttpServerResponse;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
-import com.google.common.io.Resources;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.testutil.MockHttpServerHelper;
 
-// FIXME: presunout do CinestarPageFactoryTest?
+@RunWith(BlockJUnit4ClassRunner.class)
 public class KnownDatesScannerTest extends BaseTest {
 
 	private KnownDatesScanner instance;
@@ -30,20 +30,19 @@ public class KnownDatesScannerTest extends BaseTest {
 	private Injector injector = Guice.createInjector( new CinestarModule() );
 	
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+
+		MockHttpServerResponse response = MockHttpServerHelper.forUtf8Resource( "cinestarPage.html" );
+		server.setMockHttpServerResponses( response );
+		
 		CinestarDateTimeParser parser = injector.getInstance( CinestarDateTimeParser.class );
 		instance = new KnownDatesScanner( serviceURL, parser );
 	}
 
 	@Test
-	public void testPageSnapshot() throws IOException, PageStructureException {
-		MockHttpServerResponse response = new MockHttpServerResponse();
-		URL url = Resources.getResource( "cinestarPage.html" );
-		String content = Resources.toString( url, Charsets.UTF_8 );
-		response.setMockResponseContent( content );
-		
-		server.setMockHttpServerResponses( response );
+	public void findKnownDates() throws IOException, PageStructureException {
 		
 		List<LocalDate> dates = Arrays.asList( 
 				new LocalDate( 2011, 12, 29 ),

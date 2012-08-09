@@ -1,7 +1,8 @@
 package cz.stoupa.showtimes.imports;
 
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
+
+import com.google.common.base.Objects;
 
 import cz.stoupa.showtimes.domain.Translation;
 
@@ -34,8 +35,31 @@ public class ShowingImport {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hashCode( 
+				showingDateTime, 
+				movieName,
+				translation );
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if ( obj == this) return true;
+	    if ( obj == null) return false;
+	    if ( !( obj instanceof ShowingImport ) ) return false;
+	    final ShowingImport other = (ShowingImport) obj;
+	    return Objects.equal( this.movieName, other.movieName ) &&
+	    		Objects.equal( movieName, other.movieName ) &&
+	    		Objects.equal( translation, other.translation );
+	}
+
+	@Override
 	public String toString() {
-		return DateTimeFormat.forPattern( "HH:mm" ).print( showingDateTime ) + " - "+ movieName ;
+		return Objects.toStringHelper( this )
+				.add( "showingDateTime", showingDateTime )
+				.add( "movieName", movieName )
+				.add( "translation", translation)
+				.toString();
 	}		
 
 }

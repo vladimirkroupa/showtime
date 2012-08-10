@@ -1,6 +1,6 @@
 package cz.stoupa.showtimes.imports.mat;
 
-import java.util.List;
+import java.util.Set;
 
 import org.joda.time.LocalDate;
 import org.jsoup.nodes.Document;
@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
@@ -25,8 +25,13 @@ public class MatPageScraper {
 
 	private static final Logger logger = LoggerFactory.getLogger( MatPageScraper.class );
 	
-	public List<LocalDate> extractShowingDates( Document page ) throws PageStructureException {
-		List<LocalDate> foundDates = Lists.newArrayList();
+	/**
+	 * @param page
+	 * @return list of showing dates present on page
+	 * @throws PageStructureException
+	 */
+	public Set<LocalDate> extractShowingDates( Document page ) throws PageStructureException {
+		Set<LocalDate> foundDates = Sets.newHashSet();
 		Elements showingDateHeaderElems = page.select( "html body div.main div.content1 div.kalendar" );
 		int year = extractShowingYear( page );
 		for ( Element showingDateHeader : showingDateHeaderElems ) {

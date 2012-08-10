@@ -1,5 +1,8 @@
 package cz.stoupa.showtimes.imports.mat;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
@@ -10,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 
 /**
  * Parses date and time formats on MAT showing page.
+ * FIXME: get rid of static methods
+ * FIXME: tests
  * 
  * @author stoupa
  */
@@ -58,6 +64,14 @@ public class MatDateTimeParser {
 			logger.error( "Could not parse showing time {}, expected format [{}].", time, TIME_FORMAT );
 			throw new PageStructureException( iae );
 		}
+	}
+	
+	public static int parseShowingPageYear( String monthYear ) throws PageStructureException {
+		Pattern fourDigits = Pattern.compile( "\\d\\d\\d\\d" );
+		Matcher yearMatcher = fourDigits.matcher( monthYear );
+		PageStructurePreconditions.checkPageStructure( yearMatcher.find(), "Could not parse year from string: " + monthYear );
+		String year = monthYear.substring( yearMatcher.start(), yearMatcher.end() );
+		return Integer.parseInt( year );
 	}
 	
 }

@@ -17,12 +17,12 @@ import cz.stoupa.showtimes.imports.internal.fetcher.UrlGenerator;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 
 /**
- * Creator for {@link CinestarShowingPage}.
- * FIXME: rename from Factory
+ * Creator for {@link CinestarPage}.
+ * FIXME: rename from Factory?
  * 
  * @author stoupa
  */
-public class CinestarPageFactory implements ShowingPageFactory { // FIXME: YAGNI (interface)
+public class CinestarPageFactory implements ShowingPageFactory {
 
 	// FIXME: push injector higher up
 	private Injector injector = Guice.createInjector(new CinestarModule());
@@ -38,7 +38,7 @@ public class CinestarPageFactory implements ShowingPageFactory { // FIXME: YAGNI
 	@Override
 	public ShowingPage startingWith( LocalDate date ) throws IOException {
 		Document webPage = fetcher.fetchWebPage( date );
-		ShowingPage page = new CinestarShowingPage( webPage, date, pageScraper );
+		ShowingPage page = new CinestarPage( webPage, pageScraper );
 		return page;
 	}
 

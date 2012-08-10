@@ -45,13 +45,13 @@ public class CinestarShowingPageTest extends BaseTest {
 		server.setMockHttpServerResponses( response );
 		
 		Document doc = Jsoup.connect( serviceURL ).get();
-		testObject = new CinestarShowingPage( doc, PAGE_SAVED_ON, injector.getInstance( CinestarPageScraper.class ) );
+		testObject = new CinestarPage( doc, injector.getInstance( CinestarPageScraper.class ) );
 	}
 
 	@Test
 	public void getKnownShowingDates() throws PageStructureException {
 		Set<LocalDate> expected = Sets.newHashSet( PAGE_SAVED_ON );
-		Set<LocalDate> actual = testObject.getKnownShowingDates();
+		Set<LocalDate> actual = testObject.knownShowingDates();
 		assertEquals( expected, actual );
 	}
 	
@@ -63,13 +63,13 @@ public class CinestarShowingPageTest extends BaseTest {
 	
 	@Test
 	public void getShowingsForDate() throws PageStructureException {
-		List<ShowingImport> actual = testObject.getShowingsForDate( PAGE_SAVED_ON );
+		List<ShowingImport> actual = testObject.showingsForDate( PAGE_SAVED_ON );
 		assertEquals( expectedShowings(), actual );
 	}
 	
 	@Test( expected = IllegalArgumentException.class )
 	public void getShowingsForDate_DifferentDate() throws PageStructureException {
-		List<ShowingImport> actual = testObject.getShowingsForDate( PAGE_SAVED_ON.plusDays( 1 ) );
+		List<ShowingImport> actual = testObject.showingsForDate( PAGE_SAVED_ON.plusDays( 1 ) );
 		List<ShowingImport> expected = Lists.newArrayList();
 		assertEquals( expected, actual );
 	}
@@ -134,7 +134,7 @@ public class CinestarShowingPageTest extends BaseTest {
 	public static void main( String... args ) throws IOException, PageStructureException {
 
 		CinestarPageFactory instance = new CinestarPageFactory( "http://praha5.cinestar.cz/program_multikino.php" );
-		ShowingPage page = instance.startingWith( LocalDate.now() );
-		page.getAllShowingsOnPage();
+		ShowingPage page = instance.startingWith( LocalDate.now().plusDays( 1 ) );
+		System.out.println( page.getAllShowingsOnPage() );
 	}
 }

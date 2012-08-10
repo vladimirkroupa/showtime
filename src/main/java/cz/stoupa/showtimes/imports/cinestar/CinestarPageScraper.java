@@ -52,7 +52,7 @@ public class CinestarPageScraper {
 		return parseShowingRows( showingRows, showingDate );
 	}
 	
-	private LocalDate extractShowingsDate( Document page ) throws PageStructureException {
+	public LocalDate extractShowingsDate( Document page ) throws PageStructureException {
 		// TODO: DRY (structure), see KnownDatesScanner
 		Elements dateOpts = page.select( "html body div div div div div form p select option[selected]" );
 		PageStructurePreconditions.assertSingleElement( dateOpts );

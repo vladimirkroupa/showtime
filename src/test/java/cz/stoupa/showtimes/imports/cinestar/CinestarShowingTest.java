@@ -7,8 +7,6 @@ import java.util.Set;
 import org.apache.wink.client.BaseTest;
 import org.apache.wink.client.MockHttpServer.MockHttpServerResponse;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
@@ -26,7 +24,7 @@ import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerHelper;
-import cz.stoupa.showtimes.util.JodaTimeUtil;
+import cz.stoupa.showtimes.testutil.ShowingHelper;
 
 @RunWith(BlockJUnit4ClassRunner.class)
 public class CinestarShowingTest extends BaseTest {
@@ -125,9 +123,7 @@ public class CinestarShowingTest extends BaseTest {
 	}
 	
 	private ShowingImport create( String time, String movieName, Translation translation ) {
-		LocalTime shownAt = LocalTime.parse( time );
-		LocalDateTime shownOn = JodaTimeUtil.newLocalDateTime( PAGE_SAVED_ON, shownAt );
-		return new ShowingImport( shownOn, movieName, translation );
+		return ShowingHelper.create( PAGE_SAVED_ON, time, movieName, translation);
 	}
 	
 	// FIXME: predelat na test - kam s nim?

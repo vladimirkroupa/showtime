@@ -57,7 +57,7 @@ public class CinestarShowingTest extends BaseTest {
 	
 	@Test
 	public void getAllShowingsOnPage() throws PageStructureException {
-		List<ShowingImport> actual = testObject.getAllShowingsOnPage();
+		List<ShowingImport> actual = testObject.allShowingsOnPage();
 		assertEquals( expectedShowings(), actual );
 	}
 	
@@ -135,6 +135,6 @@ public class CinestarShowingTest extends BaseTest {
 
 		CinestarPageFactory instance = new CinestarPageFactory( "http://praha5.cinestar.cz/program_multikino.php" );
 		ShowingPage page = instance.startingWith( LocalDate.now().plusDays( 1 ) );
-		System.out.println( page.getAllShowingsOnPage() );
+		System.out.println( page.allShowingsOnPage() );
 	}
 }

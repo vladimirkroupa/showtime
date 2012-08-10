@@ -19,6 +19,6 @@ public interface ShowingPage {
 	
 	List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException;
 
-	List<ShowingImport> getAllShowingsOnPage() throws PageStructureException;
+	List<ShowingImport> allShowingsOnPage() throws PageStructureException;
 
 }

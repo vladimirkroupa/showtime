@@ -22,7 +22,7 @@ public class MatPage implements ShowingPage {
 	}
 
 	@Override
-	public List<ShowingImport> getAllShowingsOnPage() throws PageStructureException {
+	public List<ShowingImport> allShowingsOnPage() throws PageStructureException {
 		return null;
 	}
 

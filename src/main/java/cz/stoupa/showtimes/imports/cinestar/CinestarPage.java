@@ -45,7 +45,7 @@ public class CinestarPage implements ShowingPage {
 	@Override
 	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
 		checkShowingDate( date );
-		return getAllShowingsOnPage(); 
+		return allShowingsOnPage(); 
 	}
 
 	private void checkShowingDate( LocalDate date ) {
@@ -74,7 +74,7 @@ public class CinestarPage implements ShowingPage {
 	}
 	
 	@Override
-	public List<ShowingImport> getAllShowingsOnPage() throws PageStructureException {
+	public List<ShowingImport> allShowingsOnPage() throws PageStructureException {
 		return pageScraper.extractAllShowings( page );
 	}
 

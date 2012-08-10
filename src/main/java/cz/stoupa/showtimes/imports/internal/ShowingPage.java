@@ -15,9 +15,9 @@ import cz.stoupa.showtimes.imports.ShowingImport;
  */
 public interface ShowingPage {
 
-	Set<LocalDate> getKnownShowingDates() throws PageStructureException;
+	Set<LocalDate> knownShowingDates() throws PageStructureException;
 	
-	List<ShowingImport> getShowingsForDate( LocalDate date ) throws PageStructureException;
+	List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException;
 
 	List<ShowingImport> getAllShowingsOnPage() throws PageStructureException;
 

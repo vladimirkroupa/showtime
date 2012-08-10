@@ -6,8 +6,8 @@ public class CinestarModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(CinestarPageScraper.class);
-		bind(CinestarDateTimeParser.class);
+		bind( CinestarPageScraper.class );
+		bind( CinestarDateTimeParser.class );
 	}
 	
 }

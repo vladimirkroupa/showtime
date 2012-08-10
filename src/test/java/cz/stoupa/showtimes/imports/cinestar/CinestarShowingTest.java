@@ -29,7 +29,7 @@ import cz.stoupa.showtimes.testutil.MockHttpServerHelper;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class CinestarShowingPageTest extends BaseTest {
+public class CinestarShowingTest extends BaseTest {
 
 	private static LocalDate PAGE_SAVED_ON = LocalDate.parse( "2012-08-09" );
 	

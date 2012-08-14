@@ -43,9 +43,10 @@ public class GetRequestPageFetcher implements WebPageFetcher {
 	private Document getDocument( String url ) throws IOException {
 		Document document;
 		try {
-			 document = Jsoup.connect( url ).get();
+			logger.info( "Connecting to URL: {}", url );
+			document = Jsoup.connect( url ).get();
 		} catch( IOException ioe ) {
-			logger.error( "Could not connect to url [" + url + "].", ioe );
+			logger.error( "Could not connect to URL [" + url + "].", ioe );
 			throw ioe;
 		}
 		return document;

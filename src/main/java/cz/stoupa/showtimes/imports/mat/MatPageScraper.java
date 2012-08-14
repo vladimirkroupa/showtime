@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
@@ -29,6 +30,13 @@ import cz.stoupa.showtimes.util.JodaTimeUtil;
  */
 public class MatPageScraper {
 
+	private MatDateTimeParser dateTimeParser; 
+
+	@Inject
+	public MatPageScraper( MatDateTimeParser dateTimeParser ) {
+		this.dateTimeParser = dateTimeParser;
+	}
+
 	public List<ShowingImport> extractAllShowings( Document page ) throws PageStructureException {
 		List<ShowingImport> allShowings = Lists.newArrayList();
 		
@@ -42,11 +50,33 @@ public class MatPageScraper {
 		
 		return allShowings;
 	}
+	
+	/**
+	 * Extracts all dates of showings on the page. 
+	 * @param page showing page
+	 * @return list of showing dates present on page
+	 */
+	public Set<LocalDate> extractShowingDates( Document page ) throws PageStructureException {
+		Set<LocalDate> foundDates = Sets.newHashSet();
+		Elements showingDateHeaderElems = page.select( "html body div.main div.content1 div.kalendar" );
+		int year = extractShowingYear( page );
+		for ( Element showingDateHeader : showingDateHeaderElems ) {
+			LocalDate showingDate = dateTimeParser.parseShowingDate( showingDateHeader.text(), year );
+			foundDates.add( showingDate );
+		}
+		return foundDates;
+	}
+	
+	public int extractShowingYear( Document page ) throws PageStructureException {
+		Elements showingMonthYearElems = page.select( "div.content_kalendar h1" );
+		Element showingMonthYear = PageStructurePreconditions.assertSingleElement( showingMonthYearElems );
+		return dateTimeParser.parseShowingPageYear( showingMonthYear.text() );
+	}
 
 	private List<ShowingImport> extractShowingsUnder( Element showingDateHeader, int showingYear ) throws PageStructureException {
 		List<ShowingImport> showings = Lists.newArrayList();
 		
-		LocalDate showingDate = MatDateTimeParser.parseShowingDate( showingDateHeader.text(), showingYear );
+		LocalDate showingDate = dateTimeParser.parseShowingDate( showingDateHeader.text(), showingYear );
 		
 		// TODO: readability
 		Element sibling = showingDateHeader.nextElementSibling();
@@ -111,7 +141,7 @@ public class MatPageScraper {
 	
 	private LocalTime extractShowingTime( Elements movieCols ) throws PageStructureException {
 		Element timeCol = movieCols.get( Indexes.SECOND );
-		return MatDateTimeParser.parseShowingTime( timeCol.text() );
+		return dateTimeParser.parseShowingTime( timeCol.text() );
 	}
 	
 	private Translation extractTranslation( Elements movieCols ) throws PageStructureException {
@@ -128,28 +158,6 @@ public class MatPageScraper {
 			return Translation.ORIGINAL;
 		}
 		return Translation.UNKNOWN;
-	}
-	
-	/**
-	 * TODO
-	 * @param page TODO
-	 * @return list of showing dates present on page
-	 */
-	public Set<LocalDate> extractShowingDates( Document page ) throws PageStructureException {
-		Set<LocalDate> foundDates = Sets.newHashSet();
-		Elements showingDateHeaderElems = page.select( "html body div.main div.content1 div.kalendar" );
-		int year = extractShowingYear( page );
-		for ( Element showingDateHeader : showingDateHeaderElems ) {
-			LocalDate showingDate = MatDateTimeParser.parseShowingDate( showingDateHeader.text(), year );
-			foundDates.add( showingDate );
-		}
-		return foundDates;
-	}
-	
-	public int extractShowingYear( Document page ) throws PageStructureException {
-		Elements showingMonthYearElems = page.select( "div.content_kalendar h1" );
-		Element showingMonthYear = PageStructurePreconditions.assertSingleElement( showingMonthYearElems );
-		return MatDateTimeParser.parseShowingPageYear( showingMonthYear.text() );
 	}
 	
 }

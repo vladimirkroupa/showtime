@@ -17,7 +17,6 @@ import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 
 /**
  * Parses date and time formats on MAT showing page.
- * FIXME: get rid of static methods
  * FIXME: tests
  * 
  * @author stoupa
@@ -35,7 +34,7 @@ public class MatDateTimeParser {
 	 * @param year year of the date
 	 * @throws PageStructureException if the date string does not conform to the expected format
 	 */
-	public static LocalDate parseShowingDate( String date, int year ) throws PageStructureException {
+	public LocalDate parseShowingDate( String date, int year ) throws PageStructureException {
 		Preconditions.checkNotNull( date );
 		
 		LocalDate showingDate;
@@ -50,13 +49,13 @@ public class MatDateTimeParser {
 		return showingDate.withYear( year );
 	}
 	
-	private static String removeDayOfWeek( String date ) {
+	private String removeDayOfWeek( String date ) {
 		String trimmed = date.trim();
 		int firstSpaceIndex = trimmed.indexOf( ' ' );
 		return trimmed.substring( firstSpaceIndex + 1 );
 	}
 
-	public static LocalTime parseShowingTime( String time ) throws PageStructureException {
+	public LocalTime parseShowingTime( String time ) throws PageStructureException {
 		
 		try {
 			return LocalTime.parse( time, DateTimeFormat.forPattern( TIME_FORMAT ) );
@@ -66,7 +65,7 @@ public class MatDateTimeParser {
 		}
 	}
 	
-	public static int parseShowingPageYear( String monthYear ) throws PageStructureException {
+	public int parseShowingPageYear( String monthYear ) throws PageStructureException {
 		Pattern fourDigits = Pattern.compile( "\\d\\d\\d\\d" );
 		Matcher yearMatcher = fourDigits.matcher( monthYear );
 		PageStructurePreconditions.checkPageStructure( yearMatcher.find(), "Could not parse year from string: " + monthYear );

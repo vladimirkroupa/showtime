@@ -16,7 +16,7 @@ public class MatImporter implements CinemaImporter {
 
 	private static final Logger logger = LoggerFactory.getLogger( MatImporter.class );
 	
-	private static final String URL_BASE = "http://www.mat.cz/matclub/cz/kino/mesicni-program?from=";
+	public static final String PUBLIC_SHOWING_PAGE = "http://www.mat.cz/matclub/cz/kino/mesicni-program";
 	
 	@Override
 	public Set<LocalDate> getDiscoverableShowingDates() throws IOException, PageStructureException {

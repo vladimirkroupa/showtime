@@ -1,44 +1,68 @@
 package cz.stoupa.showtimes.imports.mat;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wink.client.BaseTest;
-import org.apache.wink.client.MockHttpServer.MockHttpServerResponse;
 import org.joda.time.LocalDate;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.testutil.MockHttpServerHelper;
+import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
+import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.ShowingHelper;
+import cz.stoupa.showtimes.testutil.TestResources;
 
-@RunWith(BlockJUnit4ClassRunner.class)
-public class MatPageTest extends BaseTest {
+public class MatPageFactoryTest extends MockHttpServerTest {
 
+	private static final Logger logger = LoggerFactory.getLogger( MatPageFactoryTest.class );
+	
+	private static final String SHOWINGS_URL_BASE = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
+	
+	private Injector injector;
+	private MatPageFactory pageFactory;
 	private ShowingPage testObject;
 	
-	// TODO: zobecnit na potomka BaseTest
+	private void init() {
+		final WebPageFetcher fetcher = new GetRequestPageFetcher( new MatUrlGenerator( SHOWINGS_URL_BASE ) );
+		injector = Guice.createInjector( new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind( WebPageFetcher.class ).toInstance( fetcher );
+				bind( MatPageScraper.class );
+			}
+		});
+		pageFactory = new MatPageFactory( injector );
+	}
+
 	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
+	public void preparePage() throws IOException {
+		init();
+
+		String responseBody = TestResources.utf8ResourceAsString( "matAug2012partial.html" );
+		String path = MatUrlGenerator.QUERY_STRING_BASE + "2012-06-28";
+		logger.info( "Expecting requests to path: {} ", path );
+		server
+			.expect( Method.GET, path )
+			.respondWith( 200, "text/html;charset=utf-8", responseBody );
 		
-		MockHttpServerResponse response = MockHttpServerHelper.forUtf8Resource( "matAug2012partial.html" );
-		server.setMockHttpServerResponses( response );
-		
-		Document doc = Jsoup.connect( serviceURL ).get();
-		testObject = new MatPage( doc, new MatPageScraper() );
+		testObject = pageFactory.startingWith( new LocalDate( 2012, 6, 28 ) );
 	}
 	
 	@Test
@@ -50,7 +74,7 @@ public class MatPageTest extends BaseTest {
 	private Set<LocalDate> expectedDates() {
 		Set<LocalDate> expected = Sets.newHashSet();
 		for ( int day = 28; day < 31; day++ ) {
-			LocalDate expDate = LocalDate.parse( "2012-06-" + day );
+			LocalDate expDate = new LocalDate( 2012, 6, day );
 			expected.add( expDate );
 		}
 		return expected;

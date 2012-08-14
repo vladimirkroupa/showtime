@@ -18,10 +18,10 @@ public class CinestarImporter implements CinemaImporter {
 	// FIXME: temporary design flaw
 	public static final DateTimeZone commonTimeZone = DateTimeZone.forID( "Europe/Prague" );
 
-	private final KnownDatesScanner datesScanner;
+	private final CinestarKnownDatesScanner datesScanner;
 
 	@Inject
-	public CinestarImporter( KnownDatesScanner datesScanner ) {
+	public CinestarImporter( CinestarKnownDatesScanner datesScanner ) {
 		this.datesScanner = datesScanner;
 	}
 

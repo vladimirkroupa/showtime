@@ -22,12 +22,12 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
  * 
  * @author stoupa
  */
-public class KnownDatesScanner {
+public class CinestarKnownDatesScanner {
 	
 	private final CinestarDateTimeParser dateTimeParser;
 	private final String dateOptionsPageUrl;
 	
-	public KnownDatesScanner( String dateOptionsPageUrl, CinestarDateTimeParser dateTimeParser ) {
+	public CinestarKnownDatesScanner( String dateOptionsPageUrl, CinestarDateTimeParser dateTimeParser ) {
 		this.dateOptionsPageUrl = dateOptionsPageUrl;
 		this.dateTimeParser = dateTimeParser;
 	}

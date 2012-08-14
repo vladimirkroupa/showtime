@@ -44,16 +44,15 @@ public class CinestarPage implements ShowingPage {
 	
 	@Override
 	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
-		checkShowingDate( date );
-		return allShowingsOnPage(); 
+		return showingDateOk( date ) ? allShowingsOnPage() : Collections.<ShowingImport>emptyList();
 	}
 
-	private void checkShowingDate( LocalDate date ) {
+	private boolean showingDateOk( LocalDate date ) {
 		if ( ! canHandleDate( date ) ) {
-			String msg = String.format( "Page %s doesn't know showings for date %s ", this, date );
-			logger.error( msg );
-			throw new IllegalArgumentException( msg );
+			logger.warn( "Page {} doesn't know showings for date {}.", this, date );
+			return false;
 		}
+		return true;
 	}
 	
 	private boolean canHandleDate( LocalDate date ) {
@@ -68,7 +67,8 @@ public class CinestarPage implements ShowingPage {
 		try {
 			return pageScraper.extractShowingsDate( page );
 		} catch ( PageStructureException e ) {
-			logger.error( "Could not parse showing date from document: " + page, e );
+			logger.error( "Could not parse showing date from document: {} ", page );
+			logger.error( "Cause: ", e );
 			throw e;
 		}
 	}

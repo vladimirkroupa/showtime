@@ -5,6 +5,9 @@ apply plugin: 'eclipse'
 
 repositories {
     mavenCentral()
+    maven {
+    	url "https://joel1di1@github.com/joel1di1/joel1di1-mvn-repo/raw/master/releases"
+    }
 }
 
 dependencies {
@@ -21,7 +24,8 @@ dependencies {
     
     testCompile 'junit:junit:4.8.+'
 
-	testCompile 'org.apache.wink:wink-component-test-support:1.2.0-incubating'    
+	testCompile 'com.harlap:mock-http-server:1.0.1'
+
 }
 
 eclipse {

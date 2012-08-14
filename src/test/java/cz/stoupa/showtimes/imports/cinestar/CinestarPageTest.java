@@ -25,7 +25,7 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.mat.MatPageFactory;
+import cz.stoupa.showtimes.imports.mat.MatPageCreator;
 import cz.stoupa.showtimes.imports.mat.MatUrlGenerator;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.ShowingHelper;
@@ -39,13 +39,13 @@ public class CinestarPageTest extends MockHttpServerTest {
 	private static final String SHOWINGS_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
 	private Injector injector;
-	private CinestarPageFactory pageFactory;
+	private CinestarPageCreator pageFactory;
 	private ShowingPage testObject;
 	
 	@Before
 	public void init() throws Exception {
 		injector = Guice.createInjector( new CinestarModule() );
-		pageFactory = new CinestarPageFactory( SHOWINGS_URL ); 
+		pageFactory = new CinestarPageCreator( SHOWINGS_URL ); 
 		
 		String responseBody = TestResources.utf8ResourceAsString( "cinestarPraha5Aug2012.html" );
 		String path = "/";
@@ -140,7 +140,7 @@ public class CinestarPageTest extends MockHttpServerTest {
 	// FIXME: predelat na integracni test?
 	public static void main( String... args ) throws IOException, PageStructureException {
 
-		CinestarPageFactory instance = new CinestarPageFactory( "http://praha5.cinestar.cz/program_multikino.php" );
+		CinestarPageCreator instance = new CinestarPageCreator( "http://praha5.cinestar.cz/program_multikino.php" );
 		ShowingPage page = instance.startingWith( LocalDate.now().plusDays( 1 ) );
 		System.out.println( page.allShowingsOnPage() );
 	}

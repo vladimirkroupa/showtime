@@ -36,7 +36,7 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 	private static final String SHOWINGS_URL_BASE = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
 	private Injector injector;
-	private MatPageFactory pageFactory;
+	private MatPageCreator pageFactory;
 	private ShowingPage testObject;
 	
 	private void init() {
@@ -48,7 +48,7 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 				bind( MatPageScraper.class );
 			}
 		});
-		pageFactory = new MatPageFactory( injector );
+		pageFactory = new MatPageCreator( injector );
 	}
 
 	@Before

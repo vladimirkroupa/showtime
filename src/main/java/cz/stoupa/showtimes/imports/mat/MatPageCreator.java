@@ -8,15 +8,15 @@ import org.jsoup.nodes.Document;
 import com.google.inject.Injector;
 
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.internal.ShowingPageFactory;
+import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 
-public class MatPageFactory implements ShowingPageFactory {
+public class MatPageCreator implements ShowingPageCreator {
 
 	private WebPageFetcher fetcher;
 	private MatPageScraper pageScraper;
 	
-	public MatPageFactory( Injector injector ) {
+	public MatPageCreator( Injector injector ) {
 		fetcher = injector.getInstance( WebPageFetcher.class );
 		pageScraper = injector.getInstance( MatPageScraper.class );
 	}

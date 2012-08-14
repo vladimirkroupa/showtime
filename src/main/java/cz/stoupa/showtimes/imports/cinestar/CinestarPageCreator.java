@@ -9,7 +9,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.internal.ShowingPageFactory;
+import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
 import cz.stoupa.showtimes.imports.internal.fetcher.PostParamsGenerator;
 import cz.stoupa.showtimes.imports.internal.fetcher.PostRequestPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.StaticUrlGenerator;
@@ -22,7 +22,7 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
  * 
  * @author stoupa
  */
-public class CinestarPageFactory implements ShowingPageFactory {
+public class CinestarPageCreator implements ShowingPageCreator {
 
 	// FIXME: push injector higher up
 	private Injector injector = Guice.createInjector(new CinestarModule());
@@ -30,7 +30,7 @@ public class CinestarPageFactory implements ShowingPageFactory {
 	private WebPageFetcher fetcher;
 	private CinestarPageScraper pageScraper; 
 
-	public CinestarPageFactory( String showingPageUrl ) {
+	public CinestarPageCreator( String showingPageUrl ) {
 		this.fetcher = assembleFetcher( showingPageUrl );
 		this.pageScraper = injector.getInstance( CinestarPageScraper.class );
 	}

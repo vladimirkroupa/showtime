@@ -9,7 +9,7 @@ import org.joda.time.LocalDate;
  * 
  * @author stoupa
  */
-public interface ShowingPageFactory {
+public interface ShowingPageCreator {
 
 	ShowingPage startingWith( LocalDate date ) throws IOException;
 	

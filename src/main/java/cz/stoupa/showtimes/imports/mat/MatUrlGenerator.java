@@ -4,18 +4,18 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.google.inject.Inject;
+
 import cz.stoupa.showtimes.imports.internal.fetcher.UrlGenerator;
 
 public class MatUrlGenerator implements UrlGenerator {
 
-	// FIXME: move to configuration
-	public static final String DEFAULT_URL = "http://www.mat.cz/matclub/cz/kino/mesicni-program";
-	
 	public static final String QUERY_STRING_BASE = "?from=";
 	
 	private final String showingBaseUrl;
 	
-	public MatUrlGenerator( String showingBaseUrl ) {
+	@Inject
+	MatUrlGenerator( String showingBaseUrl ) {
 		this.showingBaseUrl = showingBaseUrl;
 	}
 

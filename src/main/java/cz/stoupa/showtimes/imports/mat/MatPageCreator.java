@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.joda.time.LocalDate;
 import org.jsoup.nodes.Document;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
@@ -16,9 +16,10 @@ public class MatPageCreator implements ShowingPageCreator {
 	private WebPageFetcher fetcher;
 	private MatPageScraper pageScraper;
 	
-	public MatPageCreator( Injector injector ) {
-		fetcher = injector.getInstance( WebPageFetcher.class );
-		pageScraper = injector.getInstance( MatPageScraper.class );
+	@Inject
+	public MatPageCreator( WebPageFetcher fetcher, MatPageScraper pageScraper ) {
+		this.fetcher = fetcher;
+		this.pageScraper = pageScraper;
 	}
 
 	@Override

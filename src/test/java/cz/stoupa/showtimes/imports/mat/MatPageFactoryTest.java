@@ -17,14 +17,14 @@ import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
-import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.ShowingHelper;
 import cz.stoupa.showtimes.testutil.TestResources;
@@ -33,22 +33,22 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger( MatPageFactoryTest.class );
 	
-	private static final String SHOWINGS_URL_BASE = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
+	private static final String SHOWINGS_TEST_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
-	private Injector injector;
-	private MatPageCreator pageFactory;
+	private MatPageCreator pageCreator;
 	private ShowingPage testObject;
 	
 	private void init() {
-		final WebPageFetcher fetcher = new GetRequestPageFetcher( new MatUrlGenerator( SHOWINGS_URL_BASE ) );
-		injector = Guice.createInjector( new AbstractModule() {
+		AbstractModule testModule =  new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind( WebPageFetcher.class ).toInstance( fetcher );
-				bind( MatPageScraper.class );
+				bind( String.class )
+				.annotatedWith( Names.named( "showingPageUrl" ) )
+				.toInstance( SHOWINGS_TEST_URL );
 			}
-		});
-		pageFactory = new MatPageCreator( injector );
+		};
+		Injector injector = Guice.createInjector( Modules.override( new MatModule() ).with( testModule ) );
+		pageCreator = injector.getInstance( MatPageCreator.class );
 	}
 
 	@Before
@@ -62,7 +62,7 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 			.expect( Method.GET, path )
 			.respondWith( 200, "text/html;charset=utf-8", responseBody );
 		
-		testObject = pageFactory.startingWith( new LocalDate( 2012, 6, 28 ) );
+		testObject = pageCreator.startingWith( new LocalDate( 2012, 6, 28 ) );
 	}
 	
 	@Test

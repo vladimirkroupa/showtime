@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
@@ -19,12 +20,12 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 public class MatKnownDatesScanner {
 	
 	private final MatPageScraper pageScraper;
-	private final String publicShowingPageUrl;
-	
-	@Inject	
-	public MatKnownDatesScanner( String publicShowingPageUrl, MatPageScraper pageScraper ) {
+	private final String showingPageUrl;
+
+	@Inject
+	MatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatPageScraper pageScraper ) {
 		this.pageScraper = pageScraper;
-		this.publicShowingPageUrl = publicShowingPageUrl;
+		this.showingPageUrl = showingPageUrl;
 	}
 
 	//FIXME: do not guess dates
@@ -46,7 +47,7 @@ public class MatKnownDatesScanner {
 	}
 	
 	private Document fetchLastPublicShowingsPage() throws IOException, PageStructureException {
-		Document page = fetchPage( publicShowingPageUrl );
+		Document page = fetchPage( showingPageUrl );
 		Document nextPage = null;
 		do {
 			nextPage = nextShowingPage( page );

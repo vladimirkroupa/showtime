@@ -1,5 +1,6 @@
 package cz.stoupa.showtimes.imports;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Objects;
@@ -24,6 +25,10 @@ public class ShowingImport {
 
 	public LocalDateTime getShowingDateTime() {
 		return showingDateTime;
+	}
+	
+	public LocalDate getShowingDate() {
+		return showingDateTime.toLocalDate();
 	}
 
 	public String getMovieName() {

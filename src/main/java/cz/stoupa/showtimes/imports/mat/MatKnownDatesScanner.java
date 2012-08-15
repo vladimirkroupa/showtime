@@ -19,6 +19,8 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 
 public class MatKnownDatesScanner {
 	
+	private final int SCANNED_PAGES_LIMIT = 1000;
+	
 	private final MatPageScraper pageScraper;
 	private final String showingPageUrl;
 
@@ -28,36 +30,28 @@ public class MatKnownDatesScanner {
 		this.showingPageUrl = showingPageUrl;
 	}
 
-	//FIXME: do not guess dates
 	public SortedSet<LocalDate> findKnownDates() throws IOException, PageStructureException {
-		SortedSet<LocalDate> knownDates = findLastKnownMonthDates();
-		LocalDate firstDate = knownDates.first();
-		LocalDate day = LocalDate.now();
-		while ( day.isBefore( firstDate ) ) {
-			knownDates.add( day );
-			day = day.plusDays( 1 );
-		}
-		return knownDates;
+		SortedSet<LocalDate> allKnownDates = Sets.newTreeSet();
+		Document page = fetchPage( showingPageUrl );
+		int scanned = 0;
+		do {
+			SortedSet<LocalDate> knownDatesOnPage = extractDatesFromPage( page );
+			allKnownDates.addAll( knownDatesOnPage );
+			page = nextShowingPage( page );
+			scanned++;
+		} while ( page != null && ! infiniteScanningLoop( scanned ) );
+		return allKnownDates;
 	}
 	
-	private SortedSet<LocalDate> findLastKnownMonthDates() throws IOException, PageStructureException {
-		Document lastKnownMonthPage = fetchLastPublicShowingsPage();
-		Set<LocalDate> lastMonthDates = pageScraper.extractShowingDates( lastKnownMonthPage );
+	private boolean infiniteScanningLoop( int scanned ) {
+		return scanned > SCANNED_PAGES_LIMIT;
+	}
+	
+	private SortedSet<LocalDate> extractDatesFromPage( Document page ) throws IOException, PageStructureException {
+		Set<LocalDate> lastMonthDates = pageScraper.extractShowingDates( page );
 		return Sets.newTreeSet( lastMonthDates );
 	}
 	
-	private Document fetchLastPublicShowingsPage() throws IOException, PageStructureException {
-		Document page = fetchPage( showingPageUrl );
-		Document nextPage = null;
-		do {
-			nextPage = nextShowingPage( page );
-			if ( nextPage != null ) {
-				page = nextPage;
-			}
-		} while ( nextPage != null );
-		return page;
-	}
-
 	private Document nextShowingPage( Document page ) throws PageStructureException, IOException {
 		String nextPageUrl = nextShowingPageUrl( page );
 		if ( nextPageUrl == null ) {

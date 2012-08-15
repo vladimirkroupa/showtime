@@ -48,7 +48,7 @@ public class CinestarKnownDatesScannerTest extends MockHttpServerTest {
 		logger.info( "Expecting requests to path: {} ", path );
 		server
 			.expect( Method.GET, path )
-			.respondWith( 200, "text/html;charset=utf-8", responseBody );
+			.respondWith( 200, HTML_TEXT_UTF8, responseBody );
 		
 		List<LocalDate> dates = Arrays.asList( 
 				new LocalDate( 2011, 12, 29 ),

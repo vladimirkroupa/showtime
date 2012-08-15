@@ -15,6 +15,7 @@ import com.harlap.test.http.MockHttpServer;
 public class MockHttpServerTest {
 
 	public static final int DEFAULT_PORT = 8090;
+	public static final String HTML_TEXT_UTF8 = "text/html;charset=utf-8";
 	private static final Logger logger = LoggerFactory.getLogger( MockHttpServerTest.class );
 	
 	protected final MockHttpServer server;

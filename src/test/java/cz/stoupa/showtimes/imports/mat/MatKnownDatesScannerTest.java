@@ -40,10 +40,10 @@ public class MatKnownDatesScannerTest extends MockHttpServerTest {
 		String secondRespBody = TestResources.utf8ResourceAsString( "matLastPage.html" );
 		server
 			.expect( Method.GET, CONTENT_BASE_URL )
-			.respondWith( 200, "text/plain", firstRespBody );
+			.respondWith( 200, HTML_TEXT_UTF8, firstRespBody );
 		server
 			.expect( Method.GET, CONTENT_BASE_URL + "?from=2012-09-01" )
-			.respondWith( 200, "text/plain", secondRespBody );
+			.respondWith( 200, HTML_TEXT_UTF8, secondRespBody );
 		
 		SortedSet<LocalDate> expected = Sets.newTreeSet();
 		addAugDays( expected );
@@ -53,18 +53,15 @@ public class MatKnownDatesScannerTest extends MockHttpServerTest {
 	}
 	
 	private void addAugDays( Set<LocalDate> dates ) {
-		LocalDate date = new LocalDate( 2012, 8, 12 );
-		for ( int daysToAdd = 0; daysToAdd < 31; daysToAdd++ ) {
-			date = date.plusDays( daysToAdd );
-			dates.add( date );
+		for ( int day = 12; day <= 31; day++ ) {
+			dates.add( new LocalDate( 2012, 8, day) );
 		}
+		dates.remove( new LocalDate( 2012, 8, 25) );
 	}
 
 	private void addSeptDays( Set<LocalDate> dates ) {
-		LocalDate date = new LocalDate( 2012, 9, 1 );
-		for ( int daysToAdd = 0; daysToAdd < 3; daysToAdd++ ) {
-			date = date.plusDays( daysToAdd );
-			dates.add( date );
+		for ( int day = 1; day <= 2; day++ ) {
+			dates.add( new LocalDate( 2012, 9, day) );
 		}
 	}
 	

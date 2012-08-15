@@ -60,7 +60,7 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 		logger.info( "Expecting requests to path: {} ", path );
 		server
 			.expect( Method.GET, path )
-			.respondWith( 200, "text/html;charset=utf-8", responseBody );
+			.respondWith( 200, HTML_TEXT_UTF8, responseBody );
 		
 		testObject = pageCreator.startingWith( new LocalDate( 2012, 6, 28 ) );
 	}

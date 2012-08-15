@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,16 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.mat.MatPageCreator;
-import cz.stoupa.showtimes.imports.mat.MatUrlGenerator;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.ShowingHelper;
 import cz.stoupa.showtimes.testutil.TestResources;
@@ -38,14 +32,12 @@ public class CinestarPageTest extends MockHttpServerTest {
 	private static LocalDate PAGE_SAVED_ON = LocalDate.parse( "2012-08-09" );
 	private static final String SHOWINGS_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
-	private Injector injector;
-	private CinestarPageCreator pageFactory;
+	private CinestarPageCreator pageCreator;
 	private ShowingPage testObject;
 	
 	@Before
 	public void init() throws Exception {
-		injector = Guice.createInjector( new CinestarModule() );
-		pageFactory = new CinestarPageCreator( SHOWINGS_URL ); 
+		pageCreator = new CinestarPageCreator( SHOWINGS_URL ); 
 		
 		String responseBody = TestResources.utf8ResourceAsString( "cinestarPraha5Aug2012.html" );
 		String path = "/";
@@ -54,7 +46,7 @@ public class CinestarPageTest extends MockHttpServerTest {
 			.expect( Method.POST, path )
 			.respondWith( 200, "text/html;charset=utf-8", responseBody );
 		
-		testObject = pageFactory.startingWith( new LocalDate( 2012, 6, 28 ) );
+		testObject = pageCreator.startingWith( new LocalDate( 2012, 6, 28 ) );
 	}
 
 	@Test

@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
+import cz.stoupa.showtimes.imports.internal.ImportException;
 
 public class CinestarImporter implements CinemaImporter {
 
@@ -26,12 +27,16 @@ public class CinestarImporter implements CinemaImporter {
 	}
 
 	@Override
-	public Set<LocalDate> getDiscoverableShowingDates() throws IOException,	PageStructureException {
-		return datesScanner.findKnownDates();
+	public Set<LocalDate> getDiscoverableShowingDates() throws ImportException {
+		try {
+			return datesScanner.findKnownDates();
+		} catch ( PageStructureException | IOException e ) {
+			throw new ImportException( e );
+		}
 	}
 
 	@Override
-	public List<ShowingImport> getShowingsFor( LocalDate date ) throws PageStructureException {
+	public List<ShowingImport> getShowingsFor( LocalDate date ) throws ImportException {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("NIY");
 	}

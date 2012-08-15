@@ -5,28 +5,45 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
+import cz.stoupa.showtimes.imports.internal.ImportException;
+import cz.stoupa.showtimes.imports.internal.ShowingPage;
+import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
 
 public class MatImporter implements CinemaImporter {
 
-	private static final Logger logger = LoggerFactory.getLogger( MatImporter.class );
+	private final ShowingPageCreator matPageCreator;
+	private final MatKnownDatesScanner dateScanner;
 	
-	public static final String PUBLIC_SHOWING_PAGE = "http://www.mat.cz/matclub/cz/kino/mesicni-program";
-	
-	@Override
-	public Set<LocalDate> getDiscoverableShowingDates() throws IOException, PageStructureException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("NIY");
+	public MatImporter() {
+		Injector injector = Guice.createInjector( new MatModule() );
+		matPageCreator = injector.getInstance( MatPageCreator.class );
+		dateScanner = injector.getInstance( MatKnownDatesScanner.class );
 	}
 
-	public List<ShowingImport> getShowingsFor( LocalDate aDate ) throws PageStructureException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("NIY");
+	@Override
+	public Set<LocalDate> getDiscoverableShowingDates() throws ImportException {
+		try {
+			return dateScanner.findKnownDates();
+		} catch ( PageStructureException | IOException e ) {
+			throw new ImportException( "MatImporter import failed.", e );
+		}
 	}
-	
+
+	@Override
+	public List<ShowingImport> getShowingsFor( LocalDate date ) throws ImportException {
+		try {
+			ShowingPage page = matPageCreator.startingWith( date );
+			return page.showingsForDate( date );
+		} catch ( PageStructureException | IOException e ) {
+			throw new ImportException( "MatImporter import failed.", e );
+		}
+	}
+
 }

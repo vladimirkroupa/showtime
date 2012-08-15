@@ -12,7 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cz.stoupa.showtimes.imports.ShowingImport;
-import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.imports.internal.ImportException;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 public class MatImporterTest {
@@ -21,7 +21,7 @@ public class MatImporterTest {
 	
 	@Ignore //FIXME: vyresit kodovani nebo co
 	@Test
-	public void onlyOneShowing() throws PageStructureException { 
+	public void onlyOneShowing() throws ImportException { 
 		LocalDate date = new LocalDate( 2011, 9, 19 );
 		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( date, new LocalTime( 20, 30 ) );
 		List<ShowingImport> expected = Arrays.asList( new ShowingImport( dateTime, "Kůže, kterou nosím" ) );

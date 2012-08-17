@@ -23,8 +23,8 @@ public class ShowingImport {
 			@Nullable Integer year, 
 			@Nullable Translation translation ) {
 		this.showingDateTime = showingDateTime;
-		this.originalTitle = Optional.fromNullable( originalTitle );
 		this.czechTitle = czechTitle;
+		this.originalTitle = Optional.fromNullable( originalTitle );
 		this.year = Optional.fromNullable( year );
 		this.translation = Optional.fromNullable( translation );
 	}

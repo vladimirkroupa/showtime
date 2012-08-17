@@ -148,11 +148,11 @@ public class MatPageScraper {
 		String title = czechName.text();
 		logger.debug( "Parsed czech movie title: {} ", title);
 		
-		PageStructurePreconditions.checkPageStructure( ! title.isEmpty() );
+		PageStructurePreconditions.checkPageStructure( ! title.isEmpty(), "Czech movie title must not be empty." );
 		return title;
 	}
 
-	// FIXME: DRY!!!
+	// FIXME: DRY?
 	private String extractOriginalTitle( Elements movieCols ) throws PageStructureException {
 		Element movieTitleCol = movieCols.get( Indexes.FIRST );
 		
@@ -160,7 +160,7 @@ public class MatPageScraper {
 		String title = origName.text();
 		logger.debug( "Parsed original movie title: {} ", title);
 		
-		PageStructurePreconditions.checkPageStructure( ! title.isEmpty() );
+		PageStructurePreconditions.checkPageStructure( ! title.isEmpty(), "Original movie title must not be empty." );
 		return title;
 	}
 	

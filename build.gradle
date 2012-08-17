@@ -12,20 +12,26 @@ repositories {
 
 dependencies {
 
+	// IoC
 	compile 'com.google.inject:guice:3.+'
+	// Nullable annotation
+	compile 'com.google.code.findbugs:jsr305:2.0.+'
 
+	// Java enhancements
    	compile 'com.google.guava:guava:13.+'
     compile 'joda-time:joda-time:2.+'
 
+	// logging
 	compile 'org.slf4j:slf4j-api:1.6.+'
   	compile 'ch.qos.logback:logback-classic:1.0.0'            
 
+	// HTML parsing
     compile 'org.jsoup:jsoup:1.6.+'
     
-    testCompile 'junit:junit:4.8.+'
-
+    // testing    
+    testCompile 'junit:junit:4.8.+'	
 	testCompile 'com.harlap:mock-http-server:1.0.1'
-
+	
 }
 
 eclipse {

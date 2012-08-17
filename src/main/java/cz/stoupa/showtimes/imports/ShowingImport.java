@@ -1,11 +1,12 @@
 package cz.stoupa.showtimes.imports;
 
+import javax.annotation.Nullable;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.sun.istack.internal.Nullable;
 
 import cz.stoupa.showtimes.domain.Translation;
 

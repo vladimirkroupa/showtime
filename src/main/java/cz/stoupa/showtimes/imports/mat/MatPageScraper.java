@@ -67,7 +67,7 @@ public class MatPageScraper {
 		List<ShowingImport> showings = extractAllShowings( page );
 		SortedSet<LocalDate> foundDates = Sets.newTreeSet();
 		for ( ShowingImport showing : showings ) {
-			foundDates.add( showing.getShowingDate() );
+			foundDates.add( showing.showingDate() );
 		}
 		return foundDates;
 	}
@@ -106,7 +106,6 @@ public class MatPageScraper {
 		return siblingClass.contains( "film" );
 	}
 	
-	// TODO: magic numbers
 	/**
 	 * TODO
 	 * @param movieTable TODO
@@ -137,7 +136,8 @@ public class MatPageScraper {
 		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
-		return new ShowingImport( showingDateTime, movieTitle, showingTranslation );
+		ShowingImport.Builder builder = new ShowingImport.Builder( showingDateTime, movieTitle ).translation( showingTranslation );
+		return builder.build();
 	}
 		
 	private String extractMovieTitle( Elements movieCols ) throws PageStructureException {

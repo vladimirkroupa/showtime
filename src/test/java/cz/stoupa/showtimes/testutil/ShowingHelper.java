@@ -19,7 +19,8 @@ public class ShowingHelper {
 	public static ShowingImport create( LocalDate date, String time, String movieName, Translation translation ) {
 		LocalTime shownAt = LocalTime.parse( time );
 		LocalDateTime shownOn = JodaTimeUtil.newLocalDateTime( date, shownAt );
-		return new ShowingImport( shownOn, movieName, translation );
+		ShowingImport.Builder builder = new ShowingImport.Builder( shownOn, movieName ).translation( translation );
+		return builder.build();
 	}
 	
 }

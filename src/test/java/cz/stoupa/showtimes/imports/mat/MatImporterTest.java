@@ -24,7 +24,7 @@ public class MatImporterTest {
 	public void onlyOneShowing() throws ImportException { 
 		LocalDate date = new LocalDate( 2011, 9, 19 );
 		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( date, new LocalTime( 20, 30 ) );
-		List<ShowingImport> expected = Arrays.asList( new ShowingImport( dateTime, "Kůže, kterou nosím" ) );
+		List<ShowingImport> expected = Arrays.asList( new ShowingImport.Builder( dateTime, "Kůže, kterou nosím" ).build() );
 		List<ShowingImport> actual = instance.getShowingsFor( date );
 		assertEquals( expected, actual );
 	}

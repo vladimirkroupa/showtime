@@ -50,7 +50,7 @@ public class MatPage implements ShowingPage {
 	private List<ShowingImport> findShowingFromAll( LocalDate date ) throws PageStructureException {
 		List<ShowingImport> showingsOnDate = Lists.newArrayList();
 		for ( ShowingImport showing : allShowingsOnPage() ) {
-			LocalDate shownOn = showing.getShowingDateTime().toLocalDate();  
+			LocalDate shownOn = showing.showingDateTime().toLocalDate();  
 			if ( shownOn.isEqual( date ) ) {
 				showingsOnDate.add( showing );
 			}

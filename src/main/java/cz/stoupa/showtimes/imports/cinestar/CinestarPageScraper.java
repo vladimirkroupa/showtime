@@ -70,20 +70,21 @@ public class CinestarPageScraper {
 	}
 	
 	private List<ShowingImport> parseSingleRow( Element row, LocalDate showingDate ) throws PageStructureException {
-		String name = parseMovieName( row );
+		String title = parseMovieTitle( row );
 		List<LocalTime> showingTimes = parseMovieShowingTimes( row );
 		Translation translation = parseMovieTranslation( row );
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( LocalTime time : showingTimes ) {
 			LocalDate showingDay = showingDate;
 			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
-			ShowingImport showing = new ShowingImport( when, name, translation );
+			ShowingImport.Builder builder = new ShowingImport.Builder( when, title ).translation( translation );
+			ShowingImport showing = builder.build();
 			result.add( showing );
 		}
 		return result;
 	}
 	
-	private String parseMovieName( Element movieRow ) throws PageStructureException {
+	private String parseMovieTitle( Element movieRow ) throws PageStructureException {
 		Elements nameElems = movieRow.select( "td.name span noscript" );
 		Element nameElem = assertSingleNameElement( nameElems );
 		String name = nameElem.text();

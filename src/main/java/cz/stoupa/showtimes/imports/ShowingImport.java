@@ -4,46 +4,62 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.sun.istack.internal.Nullable;
 
 import cz.stoupa.showtimes.domain.Translation;
 
 public class ShowingImport {
 	
 	private final LocalDateTime showingDateTime;
-	private final String movieName;
-	private final Translation translation;
+	private final String czechTitle;
+	private final Optional<String> originalTitle;
+	private final Optional<Integer> year;
+	private final Optional<Translation> translation;
 	
-	public ShowingImport( LocalDateTime showingDateTime, String movieName, Translation translation ) {
+	protected ShowingImport( LocalDateTime showingDateTime, 
+			String czechTitle,
+			@Nullable String originalTitle,
+			@Nullable Integer year, 
+			@Nullable Translation translation ) {
 		this.showingDateTime = showingDateTime;
-		this.movieName = movieName;
-		this.translation = translation;
+		this.originalTitle = Optional.fromNullable( originalTitle );
+		this.czechTitle = czechTitle;
+		this.year = Optional.fromNullable( year );
+		this.translation = Optional.fromNullable( translation );
 	}
 
-	public ShowingImport( LocalDateTime showingDateTime, String movieName ) {
-		this( showingDateTime, movieName, Translation.UNKNOWN );
-	}
-
-	public LocalDateTime getShowingDateTime() {
+	public LocalDateTime showingDateTime() {
 		return showingDateTime;
 	}
 	
-	public LocalDate getShowingDate() {
+	public LocalDate showingDate() {
 		return showingDateTime.toLocalDate();
 	}
 
-	public String getMovieName() {
-		return movieName;
+	public String czechTitle() {
+		return czechTitle;
 	}
-	
-	public Translation getTranslation() {
+
+	public Optional<String> originalTitle() {
+		return originalTitle;
+	}
+
+	public Optional<Integer> year() {
+		return year;
+	}
+
+	public Optional<Translation> translation() {
 		return translation;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode( 
-				showingDateTime, 
-				movieName,
+		return Objects.hashCode(
+				showingDateTime,
+				czechTitle,
+				originalTitle,
+				year,
 				translation );
 	}
 
@@ -53,8 +69,10 @@ public class ShowingImport {
 	    if ( obj == null) return false;
 	    if ( !( obj instanceof ShowingImport ) ) return false;
 	    final ShowingImport other = (ShowingImport) obj;
-	    return Objects.equal( this.movieName, other.movieName ) &&
-	    		Objects.equal( movieName, other.movieName ) &&
+	    return Objects.equal( this.showingDateTime, other.showingDateTime ) &&
+	    		Objects.equal( czechTitle, other.czechTitle ) &&
+	    		Objects.equal( originalTitle, other.originalTitle ) &&
+	    		Objects.equal( year, other.year ) &&
 	    		Objects.equal( translation, other.translation );
 	}
 
@@ -62,9 +80,45 @@ public class ShowingImport {
 	public String toString() {
 		return Objects.toStringHelper( this )
 				.add( "showingDateTime", showingDateTime )
-				.add( "movieName", movieName )
-				.add( "translation", translation)
+				.add( "czechTitle", czechTitle )
+				.add( "originalTitle", originalTitle )
+				.add( "year", year )
+				.add( "translation", translation )
 				.toString();
-	}		
+	}
+	
+	public static class Builder {
+
+		private LocalDateTime showingDateTime;
+		private String czechTitle;
+		private String originalTitle;
+		private Integer year;
+		private Translation translation;
+		
+		public Builder( LocalDateTime showingDateTime, String czechTitle ) {
+			this.showingDateTime = showingDateTime;
+			this.czechTitle = czechTitle;
+		}
+		
+		public Builder originalTitle( String originalTitle ) {
+			this.originalTitle = originalTitle;
+			return this;
+		}
+		
+		public Builder year( Integer year ) {
+			this.year = year;
+			return this;
+		}
+		
+		public Builder translation( Translation translation ) {
+			this.translation = translation;
+			return this;
+		}
+		
+		public ShowingImport build() {
+			return new ShowingImport( showingDateTime, czechTitle, originalTitle, 
+					year, translation );
+		}
+	}
 
 }

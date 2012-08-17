@@ -116,8 +116,8 @@ public class ShowingImport {
 		}
 		
 		public ShowingImport build() {
-			return new ShowingImport( showingDateTime, czechTitle, originalTitle, 
-					year, translation );
+			return new ShowingImport( showingDateTime, czechTitle, 
+					originalTitle, year, translation );
 		}
 	}
 

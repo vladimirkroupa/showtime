@@ -1,6 +1,6 @@
 package cz.stoupa.showtimes.domain;
 
-import java.util.List;
+import java.util.SortedSet;
 
 public class Cinema {
 
@@ -9,7 +9,7 @@ public class Cinema {
 	 * 
 	 * @return list of all showings, sorted by time
 	 */
-	public List<Showing> getShowingsForToday() {
+	public SortedSet<Showing> getShowingsForToday() {
 		
 		return null; //TODO
 	}

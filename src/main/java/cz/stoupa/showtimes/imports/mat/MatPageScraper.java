@@ -132,21 +132,33 @@ public class MatPageScraper {
 		LocalTime showingTime = extractShowingTime( movieCols );
 		LocalDateTime showingDateTime = JodaTimeUtil.newLocalDateTime( date, showingTime );
 		
-		String movieTitle = extractMovieTitle( movieCols );
+		String czechTitle = extractCzechTitle( movieCols );
+		String origTitle = extractOriginalTitle( movieCols );
 		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
-		ShowingImport.Builder builder = new ShowingImport.Builder( showingDateTime, movieTitle ).translation( showingTranslation );
+		ShowingImport.Builder builder = new ShowingImport.Builder( showingDateTime, czechTitle ).translation( showingTranslation ).originalTitle( origTitle );
 		return builder.build();
 	}
 		
-	private String extractMovieTitle( Elements movieCols ) throws PageStructureException {
-		Element movieNameCol = movieCols.get( Indexes.FIRST );
+	private String extractCzechTitle( Elements movieCols ) throws PageStructureException {
+		Element movieTitleCol = movieCols.get( Indexes.FIRST );
 		
-		Element czechName = PageStructurePreconditions.assertSingleElement( movieNameCol.getElementsByTag( "h4 ") );
-		//Element origName = assertSingleElement( namesCol.getElementsByTag( "h5 ") );
+		Element czechName = PageStructurePreconditions.assertSingleElement( movieTitleCol.getElementsByTag( "h4 ") );
 		String title = czechName.text();
-		logger.debug( "Parsed movie title: {} ", title);
+		logger.debug( "Parsed czech movie title: {} ", title);
+		
+		PageStructurePreconditions.checkPageStructure( ! title.isEmpty() );
+		return title;
+	}
+
+	// FIXME: DRY!!!
+	private String extractOriginalTitle( Elements movieCols ) throws PageStructureException {
+		Element movieTitleCol = movieCols.get( Indexes.FIRST );
+		
+		Element origName = PageStructurePreconditions.assertSingleElement( movieTitleCol.getElementsByTag( "h5 ") );
+		String title = origName.text();
+		logger.debug( "Parsed original movie title: {} ", title);
 		
 		PageStructurePreconditions.checkPageStructure( ! title.isEmpty() );
 		return title;

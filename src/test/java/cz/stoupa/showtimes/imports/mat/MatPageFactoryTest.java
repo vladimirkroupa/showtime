@@ -26,7 +26,7 @@ import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
-import cz.stoupa.showtimes.testutil.ShowingHelper;
+import cz.stoupa.showtimes.testutil.ShowingImportISODateTimeBuilder;
 import cz.stoupa.showtimes.testutil.TestResources;
 
 public class MatPageFactoryTest extends MockHttpServerTest {
@@ -88,13 +88,13 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 	
 	private List<ShowingImport> expectedShowings() {
 		List<ShowingImport> expected = Lists.newArrayList();
-		expected.add( ShowingHelper.create( "2012-06-28", "17:00", "André Rieu – Live in Maastricht 2011", Translation.ORIGINAL ) );
-		expected.add( ShowingHelper.create( "2012-06-28", "20:30", "Prometheus /2D/", Translation.SUBTITLES) );
-		expected.add( ShowingHelper.create( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/", Translation.DUBBING) );
-		expected.add( ShowingHelper.create( "2012-06-28", "18:30", "Poupata", Translation.ORIGINAL ) );
-		expected.add( ShowingHelper.create( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/", Translation.DUBBING ) );
-		expected.add( ShowingHelper.create( "2012-06-28", "18:30", "Poupata", Translation.ORIGINAL ) );
-		expected.add( ShowingHelper.create( "2012-06-28", "20:30", "Prometheus /2D/", Translation.SUBTITLES) );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "17:00", "André Rieu – Live in Maastricht 2011" ).translation( Translation.ORIGINAL ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES).build() );
 		return expected;
 	}
 	

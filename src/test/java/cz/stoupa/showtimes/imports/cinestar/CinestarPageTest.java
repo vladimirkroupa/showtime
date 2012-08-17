@@ -22,7 +22,7 @@ import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
-import cz.stoupa.showtimes.testutil.ShowingHelper;
+import cz.stoupa.showtimes.testutil.ShowingImportISODateTimeBuilder;
 import cz.stoupa.showtimes.testutil.TestResources;
 
 public class CinestarPageTest extends MockHttpServerTest {
@@ -125,8 +125,8 @@ public class CinestarPageTest extends MockHttpServerTest {
 		return expected;
 	}
 	
-	private ShowingImport create( String time, String movieName, Translation translation ) {
-		return ShowingHelper.create( PAGE_SAVED_ON, time, movieName, translation);
+	private ShowingImport create( String time, String movieTitle, Translation translation ) {
+		return new ShowingImportISODateTimeBuilder( PAGE_SAVED_ON, time, movieTitle ).translation( translation ).build();
 	}
 	
 	// FIXME: predelat na integracni test?

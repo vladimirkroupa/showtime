@@ -1,11 +1,10 @@
-package cz.stoupa.showtimes.testutil;
+package cz.stoupa.showtimes.util;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 import cz.stoupa.showtimes.imports.ShowingImport;
-import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 /**
  * Builder that can build {@link ShowingImport} using strings for  

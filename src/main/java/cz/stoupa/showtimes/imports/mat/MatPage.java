@@ -37,6 +37,7 @@ public class MatPage implements ShowingPage {
 	 */
 	@Override
 	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
+		logger.warn( "Using unoptimized showingsForDate method!" );
 		if ( ! knownShowingDates().contains( date ) ) {
 			logger.warn( "Page {} doesn't know showings for date {}.", this, date );
 			return Collections.emptyList();
@@ -50,7 +51,7 @@ public class MatPage implements ShowingPage {
 	private List<ShowingImport> findShowingFromAll( LocalDate date ) throws PageStructureException {
 		List<ShowingImport> showingsOnDate = Lists.newArrayList();
 		for ( ShowingImport showing : allShowingsOnPage() ) {
-			LocalDate shownOn = showing.showingDateTime().toLocalDate();  
+			LocalDate shownOn = showing.showingDate();  
 			if ( shownOn.isEqual( date ) ) {
 				showingsOnDate.add( showing );
 			}

@@ -10,8 +10,13 @@ import org.joda.time.LocalTime;
  */
 public class JodaTimeUtil {
 
+	public static LocalDateTime newLocalDateTimeUsingISO( String date, String time ) {
+		LocalDate lDate = LocalDate.parse( date );
+		LocalTime lTime = LocalTime.parse( time );
+		return JodaTimeUtil.newLocalDateTime( lDate, lTime );		
+	}
+	
 	public static LocalDateTime newLocalDateTime( LocalDate date, LocalTime time ) {
-		
 		int year = date.getYear();
 		int month = date.getMonthOfYear();
 		int day = date.getDayOfMonth();

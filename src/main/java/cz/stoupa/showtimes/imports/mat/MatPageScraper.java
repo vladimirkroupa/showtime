@@ -137,8 +137,8 @@ public class MatPageScraper {
 		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
-		ShowingImport.Builder builder = new ShowingImport.Builder( showingDateTime, czechTitle ).translation( showingTranslation ).originalTitle( origTitle );
-		return builder.build();
+		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation );
+		return showing;
 	}
 		
 	private String extractCzechTitle( Elements movieCols ) throws PageStructureException {

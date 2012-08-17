@@ -1,7 +1,5 @@
 package cz.stoupa.showtimes.imports;
 
-import javax.annotation.Nullable;
-
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -10,24 +8,25 @@ import com.google.common.base.Optional;
 
 import cz.stoupa.showtimes.domain.Translation;
 
-public class ShowingImport {
+public abstract class ShowingImport {
 	
 	private final LocalDateTime showingDateTime;
 	private final String czechTitle;
+	private final Translation translation;
 	private final Optional<String> originalTitle;
 	private final Optional<Integer> year;
-	private final Optional<Translation> translation;
 	
-	protected ShowingImport( LocalDateTime showingDateTime, 
-			String czechTitle,
-			@Nullable String originalTitle,
-			@Nullable Integer year, 
-			@Nullable Translation translation ) {
+	protected ShowingImport( 
+			LocalDateTime showingDateTime, 
+			String czechTitle, 
+			Translation translation,
+			Optional<String> originalTitle,
+			Optional<Integer> year ) { 
 		this.showingDateTime = showingDateTime;
 		this.czechTitle = czechTitle;
-		this.originalTitle = Optional.fromNullable( originalTitle );
-		this.year = Optional.fromNullable( year );
-		this.translation = Optional.fromNullable( translation );
+		this.translation = translation;
+		this.originalTitle = originalTitle;
+		this.year = year;
 	}
 
 	public LocalDateTime showingDateTime() {
@@ -42,16 +41,16 @@ public class ShowingImport {
 		return czechTitle;
 	}
 
-	public Optional<String> originalTitle() {
+	protected Translation translation() {
+		return translation;
+	}
+	
+	protected Optional<String> originalTitleMaybe() {
 		return originalTitle;
 	}
 
-	public Optional<Integer> year() {
+	protected Optional<Integer> yearMaybe() {
 		return year;
-	}
-
-	public Optional<Translation> translation() {
-		return translation;
 	}
 
 	@Override
@@ -66,8 +65,8 @@ public class ShowingImport {
 
 	@Override
 	public boolean equals(Object obj) {
-	    if ( obj == this) return true;
-	    if ( obj == null) return false;
+	    if ( obj == this ) return true;
+	    if ( obj == null ) return false;
 	    if ( !( obj instanceof ShowingImport ) ) return false;
 	    final ShowingImport other = (ShowingImport) obj;
 	    return Objects.equal( this.showingDateTime, other.showingDateTime ) &&
@@ -86,40 +85,6 @@ public class ShowingImport {
 				.add( "year", year )
 				.add( "translation", translation )
 				.toString();
-	}
-	
-	public static class Builder {
-
-		private LocalDateTime showingDateTime;
-		private String czechTitle;
-		private String originalTitle;
-		private Integer year;
-		private Translation translation;
-		
-		public Builder( LocalDateTime showingDateTime, String czechTitle ) {
-			this.showingDateTime = showingDateTime;
-			this.czechTitle = czechTitle;
-		}
-		
-		public Builder originalTitle( String originalTitle ) {
-			this.originalTitle = originalTitle;
-			return this;
-		}
-		
-		public Builder year( Integer year ) {
-			this.year = year;
-			return this;
-		}
-		
-		public Builder translation( Translation translation ) {
-			this.translation = translation;
-			return this;
-		}
-		
-		public ShowingImport build() {
-			return new ShowingImport( showingDateTime, czechTitle, 
-					originalTitle, year, translation );
-		}
 	}
 
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,7 +25,7 @@ import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
-import cz.stoupa.showtimes.util.ShowingImportISODateTimeBuilder;
+import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 public class CinestarPageTest extends MockHttpServerTest {
 
@@ -126,7 +128,9 @@ public class CinestarPageTest extends MockHttpServerTest {
 	}
 	
 	private ShowingImport create( String time, String movieTitle, Translation translation ) {
-		return new ShowingImportISODateTimeBuilder( PAGE_SAVED_ON, time, movieTitle ).translation( translation ).build();
+		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( PAGE_SAVED_ON, LocalTime.parse( time ) );
+		ShowingImport showing = new CinestarImport( dateTime, movieTitle, translation );
+		return showing;
 	}
 	
 	// FIXME: predelat na integracni test?

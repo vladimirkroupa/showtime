@@ -27,7 +27,7 @@ import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
-import cz.stoupa.showtimes.util.ShowingImportISODateTimeBuilder;
+import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 public class MatPageFactoryTest extends MockHttpServerTest {
 
@@ -88,13 +88,13 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 	
 	private List<ShowingImport> expectedShowings() {
 		List<ShowingImport> expected = Lists.newArrayList();
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "17:00", "André Rieu – Live in Maastricht 2011" ).translation( Translation.ORIGINAL ).originalTitle( "André Rieu – Live in Maastricht 2011" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES ).originalTitle( "Prometheus" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-29", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).originalTitle( "Ice Age: Continental Drift" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-29", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).originalTitle( "Poupata" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-30", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).originalTitle( "Ice Age: Continental Drift" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-30", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).originalTitle( "Poupata" ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-30", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES ).originalTitle( "Prometheus" ).build() );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "17:00" ), "André Rieu – Live in Maastricht 2011", "André Rieu – Live in Maastricht 2011", Translation.ORIGINAL ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "20:30" ), "Prometheus /2D/",  "Prometheus", Translation.SUBTITLES ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "20:30" ), "Prometheus /2D/", "Prometheus", Translation.SUBTITLES ) );
 		return expected;
 	}
 	

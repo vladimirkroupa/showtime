@@ -15,7 +15,7 @@ dependencies {
 	// IoC
 	compile 'com.google.inject:guice:3.+'
 	// Nullable annotation
-	compile 'com.google.code.findbugs:jsr305:2.0.+'
+	// might not need... compile 'com.google.code.findbugs:jsr305:2.0.+'
 
 	// Java enhancements
    	compile 'com.google.guava:guava:13.+'

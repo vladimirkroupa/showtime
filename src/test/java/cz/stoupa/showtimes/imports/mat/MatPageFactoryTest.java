@@ -88,13 +88,13 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 	
 	private List<ShowingImport> expectedShowings() {
 		List<ShowingImport> expected = Lists.newArrayList();
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "17:00", "André Rieu – Live in Maastricht 2011" ).translation( Translation.ORIGINAL ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).build() );
-		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "17:00", "André Rieu – Live in Maastricht 2011" ).translation( Translation.ORIGINAL ).originalTitle( "André Rieu – Live in Maastricht 2011" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES ).originalTitle( "Prometheus" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).originalTitle( "Ice Age: Continental Drift" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).originalTitle( "Poupata" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "16:30", "Doba ledová 4: Země v pohybu /2D/" ).translation( Translation.DUBBING ).originalTitle( "Ice Age: Continental Drift" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "18:30", "Poupata" ).translation( Translation.ORIGINAL ).originalTitle( "Prometheus" ).build() );
+		expected.add( new ShowingImportISODateTimeBuilder( "2012-06-28", "20:30", "Prometheus /2D/" ).translation( Translation.SUBTITLES ).originalTitle( "Poupata" ).build() );
 		return expected;
 	}
 	

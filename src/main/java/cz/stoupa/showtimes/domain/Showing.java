@@ -4,23 +4,32 @@ import org.joda.time.LocalDateTime;
 
 public class Showing {
 
-	//@Getter
 	private final Movie movie;
-	
-	//@Getter
+	private final Cinema cinema;
 	private final LocalDateTime dateTime;
+	private final Translation translation;
 
-	public Showing( Movie movie, LocalDateTime dateTime ) {
+	public Showing( Movie movie, Cinema cinema, LocalDateTime dateTime, Translation translation ) {
 		this.movie = movie;
 		this.dateTime = dateTime;
+		this.cinema = cinema;
+		this.translation = translation;
 	}
 
-	public Movie getMovie() {
+	public Movie movie() {
 		return movie;
 	}
 
-	public LocalDateTime getDateTime() {
+	public Cinema cinema() {
+		return cinema;
+	}
+	
+	public LocalDateTime dateTime() {
 		return dateTime;
+	}
+	
+	public Translation translation() {
+		return translation;
 	}
 	
 }

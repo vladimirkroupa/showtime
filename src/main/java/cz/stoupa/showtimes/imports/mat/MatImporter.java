@@ -22,6 +22,7 @@ public class MatImporter implements CinemaImporter {
 	private final MatKnownDatesScanner dateScanner;
 	
 	public MatImporter() {
+		// FIXME: push injector creation higher up
 		Injector injector = Guice.createInjector( new MatModule() );
 		matPageCreator = injector.getInstance( MatPageCreator.class );
 		dateScanner = injector.getInstance( MatKnownDatesScanner.class );

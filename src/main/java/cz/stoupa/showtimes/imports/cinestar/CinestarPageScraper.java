@@ -73,23 +73,24 @@ public class CinestarPageScraper {
 		String title = parseMovieTitle( row );
 		List<LocalTime> showingTimes = parseMovieShowingTimes( row );
 		Translation translation = parseMovieTranslation( row );
+		String externalId = parseExternalId( row );
 		List<ShowingImport> result = Lists.newArrayList();
 		for ( LocalTime time : showingTimes ) {
 			LocalDate showingDay = showingDate;
 			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
-			CinestarImport showing = new CinestarImport( when, title, translation );
+			CinestarImport showing = new CinestarImport( when, title, translation, externalId );
 			result.add( showing );
 		}
 		return result;
 	}
 	
 	private String parseMovieTitle( Element movieRow ) throws PageStructureException {
-		Elements nameElems = movieRow.select( "td.name span noscript" );
-		Element nameElem = assertSingleNameElement( nameElems );
-		String name = nameElem.text();
+		Elements titleElems = movieRow.select( "td.name span noscript" );
+		Element titleElem = assertSingleNameElement( titleElems );
+		String title = titleElem.text();
 		// TODO: odstranovat veci v zavorkach, GC a tak
 		// nebo parsovat <script>, vytahnout id filmu, otevrit stranku, ziskat z <h2> nazev
-		return name;
+		return title;
 	}
 	
 	private Element assertSingleNameElement( Elements names ) throws PageStructureException {
@@ -130,6 +131,22 @@ public class CinestarPageScraper {
 		}
 	}
 	
+	private String parseExternalId( Element movieRow ) throws PageStructureException {
+		Elements scriptElems = movieRow.select( "td.name script" );
+		Element scriptElem = assertSingleNameElement( scriptElems );
+		String script = scriptElem.html();
+		return parseScriptBody( script );
+	}
+	
+	private String parseScriptBody( String body ) throws PageStructureException {
+		int begin = "zobrazOdkaz(".length();
+		int end = body.length() - ");".length();
+		String insideBrackets = body.substring( begin, end );
+		String[] params = insideBrackets.split( "," );
+		PageStructurePreconditions.checkPageStructure( params.length == 4, "Expecting 4 parameters to zobrazOdkaz js call." );
+		return params[2];
+	}
+	
 	private Element selectFirstTDWClassAge( Elements tds ) throws PageStructureException {
 		if ( tds.size() != 2 ) {
 			throw new PageStructureException( "Expected 2 td.age, found " + tds.size() + "." );
@@ -141,6 +158,18 @@ public class CinestarPageScraper {
 		if ( translationSpans.size() != 2 ) {
 			throw new PageStructureException( "Expected 2 td.age span, found " + translationSpans.size() + "." );
 		}
+	}
+	
+	static class ZobrazOdkazParsingResult {
+		
+		final String movieTitle;
+		final String externalMovieId;
+
+		public ZobrazOdkazParsingResult( String movieTitle, String externalMovieId ) {
+			this.movieTitle = movieTitle;
+			this.externalMovieId = externalMovieId;
+		}
+		
 	}
 	
 }

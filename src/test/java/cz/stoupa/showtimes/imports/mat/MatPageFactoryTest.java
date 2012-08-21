@@ -88,13 +88,13 @@ public class MatPageFactoryTest extends MockHttpServerTest {
 	
 	private List<ShowingImport> expectedShowings() {
 		List<ShowingImport> expected = Lists.newArrayList();
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "17:00" ), "André Rieu – Live in Maastricht 2011", "André Rieu – Live in Maastricht 2011", Translation.ORIGINAL ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "20:30" ), "Prometheus /2D/",  "Prometheus", Translation.SUBTITLES ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL ) );
-		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "20:30" ), "Prometheus /2D/", "Prometheus", Translation.SUBTITLES ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "17:00" ), "André Rieu – Live in Maastricht 2011", "André Rieu – Live in Maastricht 2011", Translation.ORIGINAL, "3444" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-28", "20:30" ), "Prometheus /2D/",  "Prometheus", Translation.SUBTITLES, "3445" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING, "3446" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-29", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL, "3291" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "16:30" ), "Doba ledová 4: Země v pohybu /2D/", "Ice Age: Continental Drift", Translation.DUBBING, "3446" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "18:30" ), "Poupata", "Poupata", Translation.ORIGINAL, "3291" ) );
+		expected.add( new MatImport( JodaTimeUtil.newLocalDateTimeUsingISO( "2012-06-30", "20:30" ), "Prometheus /2D/", "Prometheus", Translation.SUBTITLES, "3445" ) );
 		return expected;
 	}
 	

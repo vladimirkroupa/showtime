@@ -137,7 +137,8 @@ public class MatPageScraper {
 		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
-		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation );
+		// FIXME
+		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation, "" );
 		return showing;
 	}
 		

@@ -1,5 +1,7 @@
 package cz.stoupa.showtimes.imports.cinestar;
 
+import java.util.Objects;
+
 import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Optional;
@@ -24,6 +26,28 @@ public class CinestarImport extends ShowingImport implements HasExternalMovieId<
 	@Override
 	public StringMovieId externalMovieId() {
 		return cinestarMovieId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash( cinestarMovieId, super.hashCode() );
+	}
+
+	@Override
+	public boolean canEqual( Object other ) {
+		return other instanceof CinestarImport;
+	}
+
+	@Override
+	public boolean equals( Object other ) {
+		if ( other == this ) return true;
+	    if ( other == null ) return false;
+	    if ( !( other instanceof CinestarImport ) ) return false;
+	    final CinestarImport that = (CinestarImport) other;
+	    if ( ! that.canEqual( this ) ) return false;
+	    return Objects.equals( cinestarMovieId, that.cinestarMovieId )
+	    		&& super.equals( that );
+	    		
 	}
 	
 }

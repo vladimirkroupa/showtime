@@ -2,6 +2,8 @@ package cz.stoupa.showtimes.imports.mat;
 
 import java.util.List;
 import java.util.SortedSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -108,14 +110,14 @@ public class MatPageScraper {
 	
 	/**
 	 * TODO
-	 * @param movieTable TODO
+	 * @param movieMainDiv TODO
 	 * @param date TODO
 	 * @return parsed showing, or null if movieTable contains "no showing" message
 	 */
-	private ShowingImport extractShowing( Element movieTable, LocalDate date ) throws PageStructureException {
-		logger.debug( "Parsing single showing fragment: {} ", movieTable );		
+	private ShowingImport extractShowing( Element movieMainDiv, LocalDate date ) throws PageStructureException {
+		logger.debug( "Parsing single showing fragment: {} ", movieMainDiv );		
 		
-		Element tr = PageStructurePreconditions.assertSingleElement( movieTable.getElementsByTag( "tr ") );
+		Element tr = PageStructurePreconditions.assertSingleElement( movieMainDiv.getElementsByTag( "tr ") );
 		Elements movieCols = tr.children();
 		PageStructurePreconditions.checkPageStructure( movieCols.size() == 6 || movieCols.size() == 1 );
 		// fuj
@@ -137,8 +139,8 @@ public class MatPageScraper {
 		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
-		// FIXME
-		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation, "" );
+		String externalMovieId = extractExternalMovieId( movieMainDiv );
+		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation, externalMovieId );
 		return showing;
 	}
 		
@@ -157,7 +159,7 @@ public class MatPageScraper {
 	private String extractOriginalTitle( Elements movieCols ) throws PageStructureException {
 		Element movieTitleCol = movieCols.get( Indexes.FIRST );
 		
-		Element origName = PageStructurePreconditions.assertSingleElement( movieTitleCol.getElementsByTag( "h5 ") );
+		Element origName = PageStructurePreconditions.assertSingleElement( movieTitleCol.getElementsByTag( "h5" ) );
 		String title = origName.text();
 		logger.debug( "Parsed original movie title: {} ", title);
 		
@@ -189,6 +191,30 @@ public class MatPageScraper {
 		logger.debug( "Parsed translation: {}", translation );
 		return translation;
 		
+	}
+	
+	private String extractExternalMovieId( Element movieMainDiv ) throws PageStructureException {
+		logger.debug( "Parsing movie id from fragment {}", movieMainDiv );
+		Elements as = movieMainDiv.select( "div.filmtxt a" );
+		PageStructurePreconditions.assertPageStructure( ! as.isEmpty(), "No <a> elements found." );
+		Element a = as.get( Indexes.FIRST );
+		String href = a.attr( "href" );
+		String movieId = parseExternalMovieIdFromHref( href );
+		PageStructurePreconditions.assertPageStructure( ! movieId.isEmpty(), "Could not parse external id for movie." );
+		logger.debug( "Parsed movie id: {}", movieId );
+		return movieId;
+	}
+	
+	private String parseExternalMovieIdFromHref( String hrefValue ) throws PageStructureException {
+		Pattern pattern = Pattern.compile( "movie-id=(\\d)+" );
+		Matcher matcher = pattern.matcher( hrefValue );
+		if ( !matcher.find() ) {
+			return "";
+		}
+		String value = matcher.group();
+		String[] parts = value.split( "=" );
+		PageStructurePreconditions.assertPageStructure( parts.length == 2, "Could not prse movie-id value." );
+		return parts[ Indexes.SECOND ];
 	}
 	
 }

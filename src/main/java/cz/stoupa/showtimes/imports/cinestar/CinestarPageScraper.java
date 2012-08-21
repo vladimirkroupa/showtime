@@ -86,18 +86,11 @@ public class CinestarPageScraper {
 	
 	private String parseMovieTitle( Element movieRow ) throws PageStructureException {
 		Elements titleElems = movieRow.select( "td.name span noscript" );
-		Element titleElem = assertSingleNameElement( titleElems );
+		Element titleElem = PageStructurePreconditions.assertSingleElement( titleElems );
 		String title = titleElem.text();
 		// TODO: odstranovat veci v zavorkach, GC a tak
 		// nebo parsovat <script>, vytahnout id filmu, otevrit stranku, ziskat z <h2> nazev
 		return title;
-	}
-	
-	private Element assertSingleNameElement( Elements names ) throws PageStructureException {
-		if ( names.size() != 1 ) {
-			throw new PageStructureException( "Expected 1 td.name, found " + names.size() + "." );
-		}
-		return names.get( Indexes.FIRST );
 	}
 	
 	private List<LocalTime> parseMovieShowingTimes( Element movieRow ) throws PageStructureException {
@@ -120,7 +113,7 @@ public class CinestarPageScraper {
 		boolean tVisible = t.attr( "style" ).contains( "display:normal" );
 		boolean dVisible = d.attr( "style" ).contains( "display:normal" );
 		if ( tVisible && dVisible ) {
-			throw new PageStructureException( "Translation type cannot be both T and D." );
+			PageStructurePreconditions.fail( "Translation type cannot be both T and D." );
 		}
 		if ( tVisible ) {
 			return Translation.SUBTITLES;
@@ -133,7 +126,7 @@ public class CinestarPageScraper {
 	
 	private String parseExternalId( Element movieRow ) throws PageStructureException {
 		Elements scriptElems = movieRow.select( "td.name script" );
-		Element scriptElem = assertSingleNameElement( scriptElems );
+		Element scriptElem = PageStructurePreconditions.assertSingleElement( scriptElems );
 		String script = scriptElem.html();
 		return parseScriptBody( script );
 	}
@@ -143,20 +136,20 @@ public class CinestarPageScraper {
 		int end = body.length() - ");".length();
 		String insideBrackets = body.substring( begin, end );
 		String[] params = insideBrackets.split( "," );
-		PageStructurePreconditions.checkPageStructure( params.length == 4, "Expecting 4 parameters to zobrazOdkaz js call." );
-		return params[2];
+		PageStructurePreconditions.checkPageStructure( params.length == 4, "Expected 4 parameters to zobrazOdkaz js call." );
+		return params[ Indexes.THIRD ];
 	}
 	
 	private Element selectFirstTDWClassAge( Elements tds ) throws PageStructureException {
 		if ( tds.size() != 2 ) {
-			throw new PageStructureException( "Expected 2 td.age, found " + tds.size() + "." );
+			PageStructurePreconditions.fail( "Expected 2 td.age, found " + tds.size() + "." );
 		}
 		return tds.get( FIRST );
 	}
 	
 	private void assertTwoTranslationSpans( Elements translationSpans ) throws PageStructureException {
 		if ( translationSpans.size() != 2 ) {
-			throw new PageStructureException( "Expected 2 td.age span, found " + translationSpans.size() + "." );
+			PageStructurePreconditions.fail( "Expected 2 td.age span, found " + translationSpans.size() + "." );
 		}
 	}
 	

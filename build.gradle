@@ -14,8 +14,6 @@ dependencies {
 
 	// IoC
 	compile 'com.google.inject:guice:3.+'
-	// Nullable annotation
-	// might not need... compile 'com.google.code.findbugs:jsr305:2.0.+'
 
 	// Java enhancements
    	compile 'com.google.guava:guava:13.+'
@@ -31,6 +29,7 @@ dependencies {
     // testing    
     testCompile 'junit:junit:4.8.+'	
 	testCompile 'com.harlap:mock-http-server:1.0.1'
+	testCompile 'junit-addons:junit-addons:1.4'
 	
 }
 

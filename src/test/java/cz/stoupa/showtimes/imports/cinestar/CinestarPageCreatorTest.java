@@ -27,9 +27,9 @@ import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
-public class CinestarPageTest extends MockHttpServerTest {
+public class CinestarPageCreatorTest extends MockHttpServerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger( CinestarPageTest.class );
+	private static final Logger logger = LoggerFactory.getLogger( CinestarPageCreatorTest.class );
 	
 	private static LocalDate PAGE_SAVED_ON = LocalDate.parse( "2012-08-09" );
 	private static final String SHOWINGS_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;

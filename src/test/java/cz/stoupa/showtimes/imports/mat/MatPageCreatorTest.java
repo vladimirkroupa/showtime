@@ -29,9 +29,9 @@ import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
-public class MatPageFactoryTest extends MockHttpServerTest {
+public class MatPageCreatorTest extends MockHttpServerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger( MatPageFactoryTest.class );
+	private static final Logger logger = LoggerFactory.getLogger( MatPageCreatorTest.class );
 	
 	private static final String SHOWINGS_TEST_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	

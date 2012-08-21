@@ -12,7 +12,7 @@ import cz.stoupa.showtimes.imports.internal.HasExternalMovieId;
 
 public class CinestarImport extends ShowingImport implements HasExternalMovieId<String> {
 
-	private final StringMovieId cinestarMovieId; 
+	private final StringMovieId externalMovieId; 
 	
 	public CinestarImport(
 			LocalDateTime showingDateTime, 
@@ -20,17 +20,17 @@ public class CinestarImport extends ShowingImport implements HasExternalMovieId<
 			Translation translation,
 			String cinestarMovieId ) { 
 		super( showingDateTime, czechTitle, translation, Optional.<String>absent(), Optional.<Integer>absent() );
-		this.cinestarMovieId = new StringMovieId( cinestarMovieId );
+		this.externalMovieId = new StringMovieId( cinestarMovieId );
 	}
 	
 	@Override
 	public StringMovieId externalMovieId() {
-		return cinestarMovieId;
+		return externalMovieId;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash( cinestarMovieId, super.hashCode() );
+		return Objects.hash( externalMovieId, super.hashCode() );
 	}
 
 	@Override
@@ -45,9 +45,16 @@ public class CinestarImport extends ShowingImport implements HasExternalMovieId<
 	    if ( !( other instanceof CinestarImport ) ) return false;
 	    final CinestarImport that = (CinestarImport) other;
 	    if ( ! that.canEqual( this ) ) return false;
-	    return Objects.equals( cinestarMovieId, that.cinestarMovieId )
+	    return Objects.equals( externalMovieId, that.externalMovieId )
 	    		&& super.equals( that );
 	    		
+	}
+
+	@Override
+	public String toString() {
+		return toStringHelper()
+		.add( "externalMovieId", externalMovieId )
+		.toString();
 	}
 	
 }

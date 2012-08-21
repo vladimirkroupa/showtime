@@ -122,8 +122,8 @@ public class CinestarPageTest extends MockHttpServerTest {
 		expected.add( create( "20:40", "The Amazing Spider-Man titulky", Translation.SUBTITLES, "1107" ) );
 		expected.add( create( "16:00", "Bourneův odkaz GC", Translation.SUBTITLES, "1499" ) );
 		expected.add( create( "20:00", "Bourneův odkaz GC", Translation.SUBTITLES, "1499" ) );
-		expected.add( create( "17:00", "Temný rytíř povstal GC", Translation.SUBTITLES, "1105" ) );
-		expected.add( create( "21:00", "Temný rytíř povstal GC", Translation.SUBTITLES, "1105" ) );
+		expected.add( create( "17:00", "Temný rytíř povstal GC", Translation.SUBTITLES, "1489" ) );
+		expected.add( create( "21:00", "Temný rytíř povstal GC", Translation.SUBTITLES, "1489" ) );
 		return expected;
 	}
 	

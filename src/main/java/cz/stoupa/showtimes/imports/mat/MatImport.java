@@ -15,7 +15,7 @@ import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;
 
 public class MatImport extends ShowingImport implements OrigMovieTitleAware, HasExternalMovieId<String> {
 
-	private final StringMovieId matMovieId;
+	private final StringMovieId externalMovieId;
 	
 	public MatImport(
 			LocalDateTime showingDateTime,
@@ -25,7 +25,7 @@ public class MatImport extends ShowingImport implements OrigMovieTitleAware, Has
 			String matMovieId ) {
 		super( showingDateTime, czechTitle, translation, 
 				Optional.of( originalTitle ), Optional.<Integer>absent() );
-		this.matMovieId = new StringMovieId( matMovieId );
+		this.externalMovieId = new StringMovieId( matMovieId );
 	}
 
 	@Override
@@ -35,12 +35,12 @@ public class MatImport extends ShowingImport implements OrigMovieTitleAware, Has
 
 	@Override
 	public ExternalMovieId<String> externalMovieId() {
-		return matMovieId;
+		return externalMovieId;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash( matMovieId, super.hashCode() );
+		return Objects.hash( externalMovieId, super.hashCode() );
 	}
 
 	@Override
@@ -55,9 +55,15 @@ public class MatImport extends ShowingImport implements OrigMovieTitleAware, Has
 	    if ( !( other instanceof MatImport ) ) return false;
 	    final MatImport that = (MatImport) other;
 	    if ( ! that.canEqual( this ) ) return false;
-	    return Objects.equals( this.matMovieId, that.matMovieId )
+	    return Objects.equals( externalMovieId, that.externalMovieId )
 	    		&& super.equals( that );
-	    		
+	}
+	
+	@Override
+	public String toString() {
+		return toStringHelper()
+		.add( "matMovieId", externalMovieId )
+		.toString();
 	}
 
 }

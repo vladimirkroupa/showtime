@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-public interface ShowingReadRepository {
+public interface ShowingRepository {
 
 	List<Showing> findShowingsForDateAfterTime( LocalDateTime date );
 }

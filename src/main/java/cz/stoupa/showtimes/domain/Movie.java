@@ -1,20 +1,19 @@
 package cz.stoupa.showtimes.domain;
 
-import java.util.List;
 import java.util.Map;
 
-import cz.stoupa.showtimes.external.ExternalMovieRepositoryId;
+import cz.stoupa.showtimes.external.ExternalMovieRepository;
 
 
 public class Movie {
 
 	private final Map<Country, String> titles;
 	private final Year yearOfRelease;
-	private final List<ExternalMovieRepositoryId> externalIds;
+	private final Map<ExternalMovieRepository, String> externalIds;
 	
 	//TODO builder asi
 	public Movie(Map<Country, String> titles, Year yearOfRelease,
-			List<ExternalMovieRepositoryId> externalIds) {
+			Map<ExternalMovieRepository, String> externalIds) {
 		super();
 		this.titles = titles;
 		this.yearOfRelease = yearOfRelease;
@@ -30,7 +29,7 @@ public class Movie {
 		return titles;
 	}
 	
-	public List<ExternalMovieRepositoryId> externalIds() {
+	public Map<ExternalMovieRepository, String> externalIds() {
 		return externalIds;
 	}
 	

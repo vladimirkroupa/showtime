@@ -25,12 +25,15 @@ dependencies {
 
 	// HTML parsing
     compile 'org.jsoup:jsoup:1.6.+'
+
+ 	// JSON
+ 	compile 'com.fasterxml.jackson.core:jackson-databind:2.0.5'            
     
     // testing    
     testCompile 'junit:junit:4.8.+'	
 	testCompile 'com.harlap:mock-http-server:1.0.1'
 	testCompile 'junit-addons:junit-addons:1.4'
-	
+	testCompile 'org.unitils:unitils-core:3.3'
 }
 
 eclipse {

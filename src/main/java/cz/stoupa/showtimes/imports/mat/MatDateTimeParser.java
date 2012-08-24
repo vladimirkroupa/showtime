@@ -3,8 +3,8 @@ package cz.stoupa.showtimes.imports.mat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.joda.time.MonthDay;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
@@ -31,22 +31,19 @@ public class MatDateTimeParser {
 	/**
 	 * Parses showing date from the header text.
 	 * 
-	 * @param year year of the date
 	 * @throws PageStructureException if the date string does not conform to the expected format
 	 */
-	public LocalDate parseShowingDate( String date, int year ) throws PageStructureException {
+	public MonthDay parseShowingDate( String date ) throws PageStructureException {
 		Preconditions.checkNotNull( date );
 		
-		LocalDate showingDate;
 		DateTimeFormatter matDTF = DateTimeFormat.forPattern( DATE_FORMAT );
-		String dateWODayOfWeek = removeDayOfWeek( date );
+		String dayAndMonth = removeDayOfWeek( date );
 		try {
-			showingDate = LocalDate.parse( dateWODayOfWeek, matDTF );
+			return MonthDay.parse( dayAndMonth, matDTF );
 		} catch ( IllegalArgumentException iae ) {
 			logger.error( "Could not parse MAT date {}, expected format [{}].", date, DATE_FORMAT );
 			throw new PageStructureException( iae );
 		}
-		return showingDate.withYear( year );
 	}
 	
 	private String removeDayOfWeek( String date ) {

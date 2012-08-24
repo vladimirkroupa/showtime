@@ -1,7 +1,6 @@
 package cz.stoupa.showtimes.imports.mat;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
@@ -48,8 +47,7 @@ public class MatKnownDatesScanner {
 	}
 	
 	private SortedSet<LocalDate> extractDatesFromPage( Document page ) throws IOException, PageStructureException {
-		Set<LocalDate> lastMonthDates = pageScraper.extractShowingDates( page );
-		return Sets.newTreeSet( lastMonthDates );
+		return pageScraper.extractShowingDates( page );
 	}
 	
 	private Document nextShowingPage( Document page ) throws PageStructureException, IOException {

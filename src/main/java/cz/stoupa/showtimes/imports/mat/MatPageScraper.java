@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
+import org.joda.time.MonthDay;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -46,16 +47,34 @@ public class MatPageScraper {
 		this.dateTimeParser = dateTimeParser;
 	}
 
+	public int extractShowingYear( Document page ) throws PageStructureException {
+		Elements showingMonthYearElems = page.select( "div.content_kalendar h1" );
+		Element showingMonthYear = PageStructurePreconditions.assertSingleElement( showingMonthYearElems );
+		return dateTimeParser.parseShowingPageYear( showingMonthYear.text() );
+	}
+
 	public List<ShowingImport> extractAllShowings( Document page ) throws PageStructureException {
-		List<ShowingImport> allShowings = Lists.newArrayList();
-		
-		int showingYear = extractShowingYear( page );
-		
-		Elements showingDateHeaders = page.select( "html body div.main div.content1 div.kalendar" );
-		for ( Element showingDateHeader : showingDateHeaders ) {
-			List<ShowingImport> showingsOnDate = extractShowingsUnder( showingDateHeader, showingYear );
-			allShowings.addAll( showingsOnDate );
-		}
+		final List<ShowingImport> allShowings = Lists.newArrayList();
+		final int showingYear = extractShowingYear( page );
+		Elements showingDateHeaders = findAllShowingDateHeaders( page );
+		MatShowingDateContentHandler handler = new MatShowingDateContentHandler() {
+			
+			@Override
+			public void theaterClosedOnDate( MonthDay date ) {
+			}
+
+			@Override
+			public void scheduleNotKnown( MonthDay date ) {
+			}
+			
+			@Override
+			public void showing( Element showingDiv, MonthDay date ) throws PageStructureException {
+				ShowingImport showing = extractShowing( showingDiv, date.toLocalDate( showingYear ) );
+				allShowings.add( showing );
+			}
+			
+		};
+		iterateShowings( showingDateHeaders, handler );
 		
 		return allShowings;
 	}
@@ -66,46 +85,73 @@ public class MatPageScraper {
 	 * @return list of showing dates present on page
 	 */
 	public SortedSet<LocalDate> extractShowingDates( Document page ) throws PageStructureException {
-		List<ShowingImport> showings = extractAllShowings( page );
-		SortedSet<LocalDate> foundDates = Sets.newTreeSet();
-		for ( ShowingImport showing : showings ) {
-			foundDates.add( showing.showingDate() );
-		}
+		final SortedSet<LocalDate> foundDates = Sets.newTreeSet();
+		final int showingYear = extractShowingYear( page );
+		Elements showingDateHeaders = findAllShowingDateHeaders( page );  
+		MatShowingDateContentHandler handler = new MatShowingDateContentHandler() {
+			
+			@Override
+			public void theaterClosedOnDate( MonthDay date ) {
+			}
+
+			@Override
+			public void scheduleNotKnown( MonthDay date ) {
+			}
+			
+			@Override
+			public void showing( Element showingDiv, MonthDay date ) {
+				foundDates.add( date.toLocalDate( showingYear ) );
+			}
+			
+		};
+		iterateShowings( showingDateHeaders, handler );
+		
 		return foundDates;
 	}
 	
-	public int extractShowingYear( Document page ) throws PageStructureException {
-		Elements showingMonthYearElems = page.select( "div.content_kalendar h1" );
-		Element showingMonthYear = PageStructurePreconditions.assertSingleElement( showingMonthYearElems );
-		return dateTimeParser.parseShowingPageYear( showingMonthYear.text() );
+	private Elements findAllShowingDateHeaders( Document page ) {
+		return page.select( "div.kalendar" );
 	}
-
-	private List<ShowingImport> extractShowingsUnder( Element showingDateHeader, int showingYear ) throws PageStructureException {
-		logger.debug( "Parsing date header fragment: {} ", showingDateHeader );
-		
-		List<ShowingImport> showings = Lists.newArrayList();
-		
-		LocalDate showingDate = dateTimeParser.parseShowingDate( showingDateHeader.text(), showingYear );
-		logger.debug( "Parsed date: {} ", showingDate );
-		
-		// TODO: readability
+	
+	private void iterateShowings( Elements showingDateHeaders, MatShowingDateContentHandler handler ) throws PageStructureException {
+		for ( Element showingDateHeader : showingDateHeaders ) {
+			processShowingsOnDate( showingDateHeader, handler );
+		}
+	}
+	
+	private void processShowingsOnDate( Element showingDateHeader, MatShowingDateContentHandler handler ) throws PageStructureException {
 		Element sibling = showingDateHeader.nextElementSibling();
 		while ( ( sibling != null ) && ( isShowingElement( sibling ) ) ) {
-			logger.debug( "Parsing showing fragment: {} ", sibling );
-			ShowingImport showing = extractShowing( sibling, showingDate );
-			if ( showing != null ) {
-				showings.add( showing );
-			}
-			
+			MonthDay showingDate = dateTimeParser.parseShowingDate( showingDateHeader.text() );
+			logger.debug( "Parsed date: {} ", showingDate );
+			processShowing( sibling, handler, showingDate );			
 			sibling = sibling.nextElementSibling();
 		}
-		
-		return showings;
 	}
 	
 	private boolean isShowingElement( Element sibling ) {
 		String siblingClass = sibling.className();
 		return siblingClass.contains( "film" );
+	}
+	
+	private void processShowing( Element mainShowingDiv, MatShowingDateContentHandler handler, MonthDay showingDate ) throws PageStructureException {
+		logger.debug( "Parsing single showing fragment: {} ", mainShowingDiv );		
+		
+		Element tr = PageStructurePreconditions.assertSingleElement( mainShowingDiv.getElementsByTag( "tr ") );
+		Elements movieCols = tr.children();
+		PageStructurePreconditions.checkPageStructure( movieCols.size() == 6 || movieCols.size() == 1 );
+		if ( movieCols.size() == 1 ) {
+			String text = tr.text();
+			if ( text.contains( THEATRE_CLOSED ) ) {
+				handler.theaterClosedOnDate( showingDate );
+			} else if ( text.contains( NO_SHOWINGS_YET ) ) {
+				handler.scheduleNotKnown( showingDate );
+			} else {
+				throw new PageStructureException( "Unexpected page structure: " + movieCols );
+			}
+		} else {
+			handler.showing( mainShowingDiv, showingDate );
+		}
 	}
 	
 	/**
@@ -213,8 +259,18 @@ public class MatPageScraper {
 		}
 		String value = matcher.group();
 		String[] parts = value.split( "=" );
-		PageStructurePreconditions.assertPageStructure( parts.length == 2, "Could not prse movie-id value." );
+		PageStructurePreconditions.assertPageStructure( parts.length == 2, "Could not parse movie-id value." );
 		return parts[ Indexes.SECOND ];
+	}
+
+	static interface MatShowingDateContentHandler {
+		
+		void theaterClosedOnDate( MonthDay date );
+		
+		void scheduleNotKnown( MonthDay date );
+		
+		void showing( Element mainShowingDiv, MonthDay date ) throws PageStructureException;
+		
 	}
 	
 }

@@ -2,7 +2,7 @@ package cz.stoupa.showtimes.imports.mat;
 
 import junit.framework.Assert;
 
-import org.joda.time.LocalDate;
+import org.joda.time.MonthDay;
 import org.junit.Test;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
@@ -21,15 +21,15 @@ public class MatDateTimeParserTest {
 
 	@Test
 	public void basicDate() throws PageStructureException {
-		LocalDate expected = new LocalDate(2011, 12, 27);
-		LocalDate actual = testObject.parseShowingDate("úterý 27. 12.", 2011);
+		MonthDay expected = new MonthDay( 12, 27 );
+		MonthDay actual = testObject.parseShowingDate( "úterý 27. 12." );
 		Assert.assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void singleDigitDayDate() throws PageStructureException {
-		LocalDate expected = new LocalDate(2011, 12, 9);
-		LocalDate actual = testObject.parseShowingDate("pátek 9. 12.", 2011);
+		MonthDay expected = new MonthDay( 12, 9 );
+		MonthDay actual = testObject.parseShowingDate( "pátek 9. 12." );
 		Assert.assertEquals(expected, actual);
 	}
 	

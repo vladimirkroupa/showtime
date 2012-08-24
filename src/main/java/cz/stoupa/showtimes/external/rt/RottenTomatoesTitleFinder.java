@@ -47,12 +47,12 @@ public class RottenTomatoesTitleFinder implements MovieTitleFinder {
     }
 
     private Map<Country, String> findByUSTitle( String usTitle ) {
-       // call some collaborating object
+        // FIXME: call RottenTomatoesService
     	throw new UnsupportedOperationException();
     }
 
     private Map<Country, String> findByRTid( String rtId ) {
-        // call some collaborating object
+        // FIXME: call RottenTomatoesService
     	throw new UnsupportedOperationException();
     }
 

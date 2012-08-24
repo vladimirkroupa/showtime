@@ -14,7 +14,8 @@ import com.google.common.base.Preconditions;
 
 import cz.stoupa.showtimes.external.rt.beans.RottenTomatoesResult;
 
-// FIXME: do not ignore pagination !!! 
+// FIXME: do not ignore pagination !!!
+// FIXME: implement findByRTId
 public class RottenTomatoesService {
 
 	private static final String API_KEY = "7fatgk7bs3x3mx3pvd87snvp";

@@ -10,10 +10,10 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.cinestar.StringMovieId;
 import cz.stoupa.showtimes.imports.internal.ExternalMovieId;
-import cz.stoupa.showtimes.imports.internal.HasExternalMovieId;
+import cz.stoupa.showtimes.imports.internal.HasTheaterMovieId;
 import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;
 
-public class MatImport extends ShowingImport implements OrigMovieTitleAware, HasExternalMovieId<String> {
+public class MatImport extends ShowingImport implements OrigMovieTitleAware, HasTheaterMovieId<String> {
 
 	private final StringMovieId externalMovieId;
 	
@@ -34,7 +34,7 @@ public class MatImport extends ShowingImport implements OrigMovieTitleAware, Has
 	}
 
 	@Override
-	public ExternalMovieId<String> externalMovieId() {
+	public ExternalMovieId<String> theaterMovieId() {
 		return externalMovieId;
 	}
 

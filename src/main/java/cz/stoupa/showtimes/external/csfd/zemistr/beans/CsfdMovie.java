@@ -2,8 +2,6 @@ package cz.stoupa.showtimes.external.csfd.zemistr.beans;
 
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class CsfdMovie {
 
 	private List<Actors> actors;
@@ -162,7 +160,9 @@ public class CsfdMovie {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString( this );
+		//return ToStringBuilder.reflectionToString( this );
+		// FIXME: fails gradle build - add dependency on Apache Commons 
+		throw new UnsupportedOperationException();
 	}
 
 }

@@ -9,8 +9,8 @@ import java.io.Serializable;
  *
  * @param <T> type of the external id identificator
  */
-public interface HasExternalMovieId<T extends Serializable> {
+public interface HasTheaterMovieId<T extends Serializable> {
 
-	ExternalMovieId<T> externalMovieId();
+	ExternalMovieId<T> theaterMovieId();
 	
 }

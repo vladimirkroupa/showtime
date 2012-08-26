@@ -53,7 +53,6 @@ public class MatDateTimeParser {
 	}
 
 	public LocalTime parseShowingTime( String time ) throws PageStructureException {
-		
 		try {
 			return LocalTime.parse( time, DateTimeFormat.forPattern( TIME_FORMAT ) );
 		} catch ( IllegalArgumentException iae ) {

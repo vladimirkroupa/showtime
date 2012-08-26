@@ -12,6 +12,10 @@ public final class Year {
 		this.value = year;
 	}
 	
+	public Year( String year ) {
+		this( Integer.parseInt( year ) );
+	}
+	
 	private static final int GREGORIAN_CALENDAR_START = 1582;
 	
 	private static boolean valid( int year ) {

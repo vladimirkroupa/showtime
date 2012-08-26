@@ -14,7 +14,7 @@ public class MatModule extends AbstractModule {
 	
 	@Override
 	protected void configure() {
-		bind( MatPageScraper.class );
+		bind( MatSchedulePageScraper.class );
 		bind( MatDateTimeParser.class );
 		bind( MatPageCreator.class );
 		bind( String.class )
@@ -30,7 +30,7 @@ public class MatModule extends AbstractModule {
 	 
 	 @Provides 
 	 MatKnownDatesScanner provideMatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl,
-			 MatPageScraper pageScraper ) {
+			 MatSchedulePageScraper pageScraper ) {
 		MatKnownDatesScanner instance = new MatKnownDatesScanner( showingPageUrl, pageScraper );
 		return instance;
 	 }

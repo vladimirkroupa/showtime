@@ -20,11 +20,11 @@ public class MatKnownDatesScanner {
 	
 	private final int SCANNED_PAGES_LIMIT = 500;
 	
-	private final MatPageScraper pageScraper;
+	private final MatSchedulePageScraper pageScraper;
 	private final String showingPageUrl;
 
 	@Inject
-	MatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatPageScraper pageScraper ) {
+	MatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatSchedulePageScraper pageScraper ) {
 		this.pageScraper = pageScraper;
 		this.showingPageUrl = showingPageUrl;
 	}

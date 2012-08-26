@@ -29,7 +29,7 @@ public class MatKnownDatesScannerTest extends MockHttpServerTest {
 	@Before
 	public void init() {
 		injector = Guice.createInjector( new MatModule() );
-		MatPageScraper pageScraper = injector.getInstance( MatPageScraper.class );
+		MatSchedulePageScraper pageScraper = injector.getInstance( MatSchedulePageScraper.class );
 		String url = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT + CONTENT_BASE_URL;
 		testObject = new MatKnownDatesScanner( url, pageScraper );
 	}

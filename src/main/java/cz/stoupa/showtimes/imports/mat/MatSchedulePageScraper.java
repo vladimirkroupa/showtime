@@ -27,23 +27,23 @@ import cz.stoupa.showtimes.util.Indexes;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 
 /**
- * Scraper for Mat showing page.
+ * Scraper for Mat schedule page.
  * Stateless.
  * 
  * @author stoupa
  *
  */
-public class MatPageScraper {
+public class MatSchedulePageScraper {
 
 	private static final String NO_SHOWINGS_YET = "nebyl zadán";
 	private static final String THEATRE_CLOSED = "KINO NEHRAJE";
 
-	private static final Logger logger = LoggerFactory.getLogger( MatPageScraper.class );
+	private static final Logger logger = LoggerFactory.getLogger( MatSchedulePageScraper.class );
 	
 	private MatDateTimeParser dateTimeParser; 
 
 	@Inject
-	public MatPageScraper( MatDateTimeParser dateTimeParser ) {
+	public MatSchedulePageScraper( MatDateTimeParser dateTimeParser ) {
 		this.dateTimeParser = dateTimeParser;
 	}
 

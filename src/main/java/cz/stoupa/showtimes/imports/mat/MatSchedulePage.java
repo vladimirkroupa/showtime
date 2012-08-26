@@ -15,14 +15,14 @@ import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 
-public class MatPage implements ShowingPage {
+public class MatSchedulePage implements ShowingPage {
 
-	private static final Logger logger = LoggerFactory.getLogger( MatPage.class );
+	private static final Logger logger = LoggerFactory.getLogger( MatSchedulePage.class );
 	
-	private final MatPageScraper pageScraper;
+	private final MatSchedulePageScraper pageScraper;
 	private final Document page;
 	
-	public MatPage( Document page, MatPageScraper pageScraper ) {
+	public MatSchedulePage( Document page, MatSchedulePageScraper pageScraper ) {
 		this.pageScraper = pageScraper;
 		this.page = page;
 	}

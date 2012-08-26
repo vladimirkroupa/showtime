@@ -78,7 +78,7 @@ public class CinestarPageScraper {
 		for ( LocalTime time : showingTimes ) {
 			LocalDate showingDay = showingDate;
 			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
-			CinestarImport showing = new CinestarImport( when, title, translation, externalId );
+			CinestarMainImport showing = new CinestarMainImport( when, title, translation, externalId );
 			result.add( showing );
 		}
 		return result;

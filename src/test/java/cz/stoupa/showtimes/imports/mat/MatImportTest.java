@@ -19,24 +19,24 @@ public class MatImportTest extends EqualsHashCodeTestCase {
 
 	@Override
 	protected Object createInstance() throws Exception {
-		return new MatImport( now, "Psíček", "Doggie", Translation.ORIGINAL, "1001" );
+		return new MatMainImport( now, "Psíček", "Doggie", Translation.ORIGINAL, "1001" );
 	}
 
 	@Override
 	protected Object createNotEqualInstance() throws Exception {
-		return new MatImport( now, "Halíček", "Halicek", Translation.SUBTITLES, "1002" );
+		return new MatMainImport( now, "Halíček", "Halicek", Translation.SUBTITLES, "1002" );
 	}
 
 	public void testEqualsSupertype() throws Exception {
 		ShowingImport supertype = new ShowingImport( now, "Psíček", Translation.ORIGINAL, Optional.<String>absent(), Optional.<Integer>absent() ) {	};
-		MatImport black = (MatImport) createInstance();
+		MatMainImport black = (MatMainImport) createInstance();
 		assertFalse( black.equals( supertype ) );
 		assertFalse( supertype.equals( black ) );
 	}
 	
 	public void testEqualsSubtype() throws Exception {
-		MatImport subtype = new MatImport( now, "Psíček", "Doggie", Translation.ORIGINAL, "1001" ) { };
-		MatImport black = (MatImport) createInstance();
+		MatMainImport subtype = new MatMainImport( now, "Psíček", "Doggie", Translation.ORIGINAL, "1001" ) { };
+		MatMainImport black = (MatMainImport) createInstance();
 		assertTrue( black.equals( subtype ) );
 		assertTrue( subtype.equals( black ) );
 	}

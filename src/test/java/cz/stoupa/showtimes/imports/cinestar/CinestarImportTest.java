@@ -25,24 +25,24 @@ public class CinestarImportTest extends EqualsHashCodeTestCase {
 
 	@Override
 	protected Object createInstance() throws Exception {
-		return new CinestarImport( now, "Psíček", Translation.ORIGINAL, "1001" );
+		return new CinestarMainImport( now, "Psíček", Translation.ORIGINAL, "1001" );
 	}
 
 	@Override
 	protected Object createNotEqualInstance() throws Exception {
-		return new CinestarImport( now, "Halíček", Translation.SUBTITLES, "1002" );
+		return new CinestarMainImport( now, "Halíček", Translation.SUBTITLES, "1002" );
 	}
 
 	public void testEqualsSupertype() throws Exception {
 		ShowingImport supertype = new ShowingImport( now, "Psíček", Translation.ORIGINAL, Optional.<String>absent(), Optional.<Integer>absent() ) {	};
-		CinestarImport black = (CinestarImport) createInstance();
+		CinestarMainImport black = (CinestarMainImport) createInstance();
 		assertFalse( black.equals( supertype ) );
 		assertFalse( supertype.equals( black ) );
 	}
 	
 	public void testEqualsSubtype() throws Exception {
-		CinestarImport subtype = new CinestarImport( now, "Psíček", Translation.ORIGINAL, "1001" ) { };
-		CinestarImport black = (CinestarImport) createInstance();
+		CinestarMainImport subtype = new CinestarMainImport( now, "Psíček", Translation.ORIGINAL, "1001" ) { };
+		CinestarMainImport black = (CinestarMainImport) createInstance();
 		assertTrue( black.equals( subtype ) );
 		assertTrue( subtype.equals( black ) );
 	}

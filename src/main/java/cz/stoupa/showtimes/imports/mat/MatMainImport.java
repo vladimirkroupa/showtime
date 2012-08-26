@@ -13,11 +13,17 @@ import cz.stoupa.showtimes.imports.internal.ExternalMovieId;
 import cz.stoupa.showtimes.imports.internal.HasTheaterMovieId;
 import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;
 
-public class MatImport extends ShowingImport implements OrigMovieTitleAware, HasTheaterMovieId<String> {
+/**
+ * Import from Mat showing page. 
+ * 
+ * @author stoupa
+ *
+ */
+public class MatMainImport extends ShowingImport implements OrigMovieTitleAware, HasTheaterMovieId<String> {
 
 	private final StringMovieId externalMovieId;
 	
-	public MatImport(
+	public MatMainImport(
 			LocalDateTime showingDateTime,
 			String czechTitle,
 			String originalTitle,
@@ -45,15 +51,15 @@ public class MatImport extends ShowingImport implements OrigMovieTitleAware, Has
 
 	@Override
 	public boolean canEqual( Object other ) {
-		return other instanceof MatImport;
+		return other instanceof MatMainImport;
 	}
 
 	@Override
 	public boolean equals( Object other ) {
 		if ( other == this ) return true;
 	    if ( other == null ) return false;
-	    if ( !( other instanceof MatImport ) ) return false;
-	    final MatImport that = (MatImport) other;
+	    if ( !( other instanceof MatMainImport ) ) return false;
+	    final MatMainImport that = (MatMainImport) other;
 	    if ( ! that.canEqual( this ) ) return false;
 	    return Objects.equals( externalMovieId, that.externalMovieId )
 	    		&& super.equals( that );

@@ -186,7 +186,7 @@ public class MatPageScraper {
 		Translation showingTranslation = extractTranslation( movieCols );
 		
 		String externalMovieId = extractExternalMovieId( movieMainDiv );
-		MatImport showing = new MatImport( showingDateTime, czechTitle, origTitle, showingTranslation, externalMovieId );
+		MatMainImport showing = new MatMainImport( showingDateTime, czechTitle, origTitle, showingTranslation, externalMovieId );
 		return showing;
 	}
 		

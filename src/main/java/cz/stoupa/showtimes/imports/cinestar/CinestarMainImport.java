@@ -10,11 +10,17 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.HasTheaterMovieId;
 
-public class CinestarImport extends ShowingImport implements HasTheaterMovieId<String> {
+/**
+ * Import from Cinestar main showing page.
+ * 
+ * @author stoupa
+ *
+ */
+public class CinestarMainImport extends ShowingImport implements HasTheaterMovieId<String> {
 
 	private final StringMovieId externalMovieId; 
 	
-	public CinestarImport(
+	public CinestarMainImport(
 			LocalDateTime showingDateTime, 
 			String czechTitle,
 			Translation translation,
@@ -35,15 +41,15 @@ public class CinestarImport extends ShowingImport implements HasTheaterMovieId<S
 
 	@Override
 	public boolean canEqual( Object other ) {
-		return other instanceof CinestarImport;
+		return other instanceof CinestarMainImport;
 	}
 
 	@Override
 	public boolean equals( Object other ) {
 		if ( other == this ) return true;
 	    if ( other == null ) return false;
-	    if ( !( other instanceof CinestarImport ) ) return false;
-	    final CinestarImport that = (CinestarImport) other;
+	    if ( !( other instanceof CinestarMainImport ) ) return false;
+	    final CinestarMainImport that = (CinestarMainImport) other;
 	    if ( ! that.canEqual( this ) ) return false;
 	    return Objects.equals( externalMovieId, that.externalMovieId )
 	    		&& super.equals( that );

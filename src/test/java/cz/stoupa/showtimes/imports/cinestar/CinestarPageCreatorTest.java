@@ -129,7 +129,7 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	
 	private ShowingImport create( String time, String movieTitle, Translation translation, String externalId ) {
 		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( PAGE_SAVED_ON, LocalTime.parse( time ) );
-		ShowingImport showing = new CinestarImport( dateTime, movieTitle, translation, externalId );
+		ShowingImport showing = new CinestarMainImport( dateTime, movieTitle, translation, externalId );
 		return showing;
 	}
 	

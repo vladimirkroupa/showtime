@@ -1,5 +1,7 @@
 package cz.stoupa.showtimes.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.joda.time.LocalDateTime;
 
 public class Showing {
@@ -9,11 +11,11 @@ public class Showing {
 	private final LocalDateTime dateTime;
 	private final Translation translation;
 
-	public Showing( Movie movie, Cinema cinema, LocalDateTime dateTime, Translation translation ) {
-		this.movie = movie;
-		this.dateTime = dateTime;
-		this.cinema = cinema;
-		this.translation = translation;
+	public Showing( ShowingBuilder builder ) {
+		this.movie = checkNotNull( builder.buildMovie() );
+		this.dateTime = checkNotNull( builder.buildDateTime() );
+		this.cinema = checkNotNull( builder.buildCinema() );
+		this.translation = checkNotNull( builder.buildTranslation() );
 	}
 
 	public Movie movie() {
@@ -32,4 +34,10 @@ public class Showing {
 		return translation;
 	}
 	
+	public interface ShowingBuilder {
+		Movie buildMovie();
+		Cinema buildCinema();
+		LocalDateTime buildDateTime();
+		Translation buildTranslation();
+	}
 }

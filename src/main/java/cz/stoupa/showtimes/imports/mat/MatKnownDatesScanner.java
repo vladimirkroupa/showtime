@@ -15,6 +15,7 @@ import com.google.inject.name.Named;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 
 public class MatKnownDatesScanner {
 	

@@ -1,4 +1,4 @@
-package cz.stoupa.showtimes.imports.mat;
+package cz.stoupa.showtimes.imports.mat.schedule;
 
 import java.util.Collections;
 import java.util.List;

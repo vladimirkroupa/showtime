@@ -7,6 +7,8 @@ import com.google.inject.name.Names;
 
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
+import cz.stoupa.showtimes.imports.mat.schedule.MatUrlGenerator;
 
 public class MatModule extends AbstractModule {
 

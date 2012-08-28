@@ -9,6 +9,8 @@ import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePage;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 
 public class MatPageCreator implements ShowingPageCreator {
 

@@ -16,6 +16,7 @@ import com.google.inject.Injector;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 

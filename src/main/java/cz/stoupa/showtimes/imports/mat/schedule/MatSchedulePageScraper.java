@@ -1,4 +1,4 @@
-package cz.stoupa.showtimes.imports.mat;
+package cz.stoupa.showtimes.imports.mat.schedule;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -23,6 +23,8 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
+import cz.stoupa.showtimes.imports.mat.MatDateTimeParser;
+import cz.stoupa.showtimes.imports.mat.MatMainImport;
 import cz.stoupa.showtimes.util.Indexes;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
 

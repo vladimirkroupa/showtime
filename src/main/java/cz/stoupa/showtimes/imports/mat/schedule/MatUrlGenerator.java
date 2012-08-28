@@ -1,4 +1,4 @@
-package cz.stoupa.showtimes.imports.mat;
+package cz.stoupa.showtimes.imports.mat.schedule;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -15,7 +15,7 @@ public class MatUrlGenerator implements UrlGenerator {
 	private final String showingBaseUrl;
 	
 	@Inject
-	MatUrlGenerator( String showingBaseUrl ) {
+	public MatUrlGenerator( String showingBaseUrl ) {
 		this.showingBaseUrl = showingBaseUrl;
 	}
 

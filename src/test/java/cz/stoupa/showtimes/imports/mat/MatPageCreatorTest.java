@@ -25,6 +25,7 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
+import cz.stoupa.showtimes.imports.mat.schedule.MatUrlGenerator;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 import cz.stoupa.showtimes.util.JodaTimeUtil;

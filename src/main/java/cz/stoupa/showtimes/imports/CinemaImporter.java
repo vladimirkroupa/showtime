@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.joda.time.LocalDate;
 
+import cz.stoupa.showtimes.domain.Showing.ShowingBuilder;
 import cz.stoupa.showtimes.imports.internal.ImportException;
 
 public interface CinemaImporter {
@@ -22,6 +23,6 @@ public interface CinemaImporter {
 	 * @throws PageStructureException
 	 */
 	//TODO: osetrit dotaz mimo znamy program - prazdny list?
-	List<ShowingImport> getShowingsFor( LocalDate date ) throws ImportException;
+	List<ShowingBuilder> getShowingsFor( LocalDate date ) throws ImportException;
 
 }

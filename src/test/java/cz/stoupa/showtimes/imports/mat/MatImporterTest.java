@@ -21,13 +21,13 @@ public class MatImporterTest {
 
 	private MatImporter instance = new MatImporter();
 	
-	@Ignore //FIXME: vyresit kodovani nebo co
+	@Ignore //FIXME: predelat na integracni test?
 	@Test
 	public void onlyOneShowing() throws ImportException { 
 		LocalDate date = new LocalDate( 2011, 9, 19 );
 		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( date, new LocalTime( 20, 30 ) );
 		List<MatMainImport> expected = Lists.newArrayList( new MatMainImport( dateTime, "Kůže, kterou nosím", "", Translation.SUBTITLES, "" ) );
-		List<ShowingImport> actual = instance.getShowingsFor( date );
+		List<ShowingImport> actual = null; //instance.getShowingsFor( date );
 		assertEquals( expected, actual );
 	}
 }

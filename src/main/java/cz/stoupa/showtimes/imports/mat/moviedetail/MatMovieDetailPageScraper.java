@@ -3,11 +3,13 @@ package cz.stoupa.showtimes.imports.mat.moviedetail;
 import static cz.stoupa.showtimes.util.Indexes.FIRST;
 import static cz.stoupa.showtimes.util.Indexes.THIRD;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,40 +24,41 @@ public class MatMovieDetailPageScraper {
 
 	private static final Logger logger = LoggerFactory.getLogger( MatMovieDetailPageScraper.class );
 	
-	private static final int EXPECTED_BRS = 5;
-	private static final int BR_GROUPS = EXPECTED_BRS + 1;
-	private static final int MIN_BRS_TO_ATTEMPT = 3;
+	private static final int EXPECTED_TEXT_NODES = 5;
+	private static final int MIN_TEXT_NODES = 3;
 	private static final Pattern YEAR_PATTERN = Pattern.compile( "[12]\\d{3}" );
 	
 	public Year extractMovieReleaseYear( Document showingDetailPage ) throws PageStructureException {
 		Element infoDiv = PageStructurePreconditions.assertSingleElement( showingDetailPage.select( "div.dvddetail3" ) );
-
-		String infoFrag = infoDiv.html();
-		PageStructurePreconditions.checkPageStructure( ! infoFrag.trim().isEmpty(), "Movie info div must not be empty." );
-		Optional<Year> fromFrag = extractYearFromFragment( infoFrag );
-		String infoText = infoDiv.text();
-		Optional<Year> fromText =  extractYearFromText( infoText );
+		PageStructurePreconditions.checkPageStructure( infoDiv.hasText(), "Movie info div must contain text." );
 		
-		boolean found = fromFrag.isPresent() || fromText.isPresent();
-		PageStructurePreconditions.assertPageStructure( found, "Could not parse movie release year." );
-		Optional<Year> result = fromFrag.or( fromText );
+		Optional<Year> fromFrag = extractYearFromFragment( infoDiv ); 
+		Optional<Year> result = ( fromFrag.isPresent() ) ? fromFrag : extractYearFromText( infoDiv.text() );
+		
+		// if it were possible to evaluate lazily, I'd do this:
+		// Optional<Year> result = extractYearFromFragment( infoDiv ).or( extractYearFromText( infoDiv.text() ) );
+		
+		if ( ! result.isPresent() ) {
+			PageStructurePreconditions.fail( "Could not parse movie release year." );
+		}
 		return result.get();
 	}
 	
-	private Optional<Year> extractYearFromFragment( String infoFragment ) {
-		logger.debug( "Trying to parse year from fragment: {}", infoFragment );
-		String[] parts = infoFragment.split( "<br>" );
-		if ( parts.length < BR_GROUPS ) {
-			logger.warn( "Expected {} <br> tags in movie info fragment {}.", EXPECTED_BRS, infoFragment );
+	private Optional<Year> extractYearFromFragment( Element infoDiv ) {
+		logger.debug( "Trying to parse year from fragment: {}", infoDiv );
+		List<TextNode> textNodes = infoDiv.textNodes();
+
+		if ( textNodes.size() < EXPECTED_TEXT_NODES ) {
+			logger.warn( "Expected {} text nodes in movie info fragment {}.", EXPECTED_TEXT_NODES, infoDiv );
 		}
-		if ( parts.length < MIN_BRS_TO_ATTEMPT ) {
+		if ( textNodes.size() < MIN_TEXT_NODES ) {
 			return Optional.absent();
 		}
-		String year = parts[ THIRD ];
+		String year = textNodes.get( THIRD ).text().trim();
 		try {
 			return Optional.of( new Year( year ) );
 		} catch ( IllegalArgumentException e ) {
-			logger.warn( "Could not parse year after second <br> tag from fragment {}.", infoFragment );
+			logger.warn( "Could not parse year from text node text {} .", year );
 			return Optional.absent();
 		}
 	}
@@ -63,7 +66,7 @@ public class MatMovieDetailPageScraper {
 	private Optional<Year> extractYearFromText( String infoText ) {
 		logger.debug( "Trying to parse year from text: {}", infoText );
 		Matcher matcher = YEAR_PATTERN.matcher( infoText );
-		if ( ! matcher.lookingAt() ) {
+		if ( ! matcher.find() ) {
 			logger.warn( "Could not find year in movie info text {}.", infoText );
 			return Optional.absent();
 		}

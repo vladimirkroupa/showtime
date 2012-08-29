@@ -8,7 +8,7 @@ import com.google.inject.name.Names;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
-import cz.stoupa.showtimes.imports.mat.schedule.MatUrlGenerator;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 
 public class MatModule extends AbstractModule {
 
@@ -26,7 +26,7 @@ public class MatModule extends AbstractModule {
 	
 	 @Provides 
 	 WebPageFetcher provideWebPageFetcher( @Named("showingPageUrl") String showingPageUrl ) {
-		MatUrlGenerator urlGenerator = new MatUrlGenerator( showingPageUrl );
+		MatSchedulePageUrlGenerator urlGenerator = new MatSchedulePageUrlGenerator( showingPageUrl );
 		return new GetRequestPageFetcher( urlGenerator );
 	  }
 	 

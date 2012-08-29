@@ -8,14 +8,14 @@ import com.google.inject.Inject;
 
 import cz.stoupa.showtimes.imports.internal.fetcher.UrlGenerator;
 
-public class MatUrlGenerator implements UrlGenerator {
+public class MatSchedulePageUrlGenerator implements UrlGenerator<LocalDate> {
 
 	public static final String QUERY_STRING_BASE = "?from=";
 	
 	private final String showingBaseUrl;
 	
 	@Inject
-	public MatUrlGenerator( String showingBaseUrl ) {
+	public MatSchedulePageUrlGenerator( String showingBaseUrl ) {
 		this.showingBaseUrl = showingBaseUrl;
 	}
 

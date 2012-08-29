@@ -1,13 +1,12 @@
 package cz.stoupa.showtimes.imports.internal.fetcher;
 
-import org.joda.time.LocalDate;
 
 /**
  * Url generator that always returns the same URL. 
  * 
  * @author stoupa
  */
-public class StaticUrlGenerator implements UrlGenerator {
+public class StaticUrlGenerator  implements UrlGenerator<Void> {
 
 	private final String url;
 	
@@ -16,7 +15,7 @@ public class StaticUrlGenerator implements UrlGenerator {
 	}
 
 	@Override
-	public String prepareUrl( LocalDate date ) {
+	public String prepareUrl( Void nothing ) {
 		return url;
 	}
 	

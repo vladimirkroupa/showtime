@@ -1,15 +1,9 @@
 package cz.stoupa.showtimes.imports.internal.fetcher;
 
-import org.joda.time.LocalDate;
 
-/**
- * Creates showing page URL for a given date.   
- * 
- * @author stoupa
- *
- */
-public interface UrlGenerator {
+// FIXME: to s tim generickym typem moc nefunguje
+public interface UrlGenerator<T> {
 
-	String prepareUrl( LocalDate date );
+	String prepareUrl( T input );
 	
 }

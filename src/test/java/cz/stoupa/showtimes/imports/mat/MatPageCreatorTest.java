@@ -25,7 +25,7 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
-import cz.stoupa.showtimes.imports.mat.schedule.MatUrlGenerator;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
@@ -57,7 +57,7 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 		init();
 
 		String responseBody = TestResources.utf8ResourceAsString( "matAug2012partial.html" );
-		String path = MatUrlGenerator.QUERY_STRING_BASE + "2012-06-28";
+		String path = MatSchedulePageUrlGenerator.QUERY_STRING_BASE + "2012-06-28";
 		logger.info( "Expecting requests to path: {} ", path );
 		server
 			.expect( Method.GET, path )

@@ -44,7 +44,7 @@ public class CinestarPageCreator implements ShowingPageCreator {
 
 	// TODO: Guice?
 	private static WebPageFetcher assembleFetcher( String showingPageUrl ) {
-		UrlGenerator urlGen = new StaticUrlGenerator( showingPageUrl );
+		UrlGenerator<Void> urlGen = new StaticUrlGenerator( null );
 		PostParamsGenerator paramGen = new CinestarDayIdForgingPostParameterGenerator();
 		return new PostRequestPageFetcher( urlGen, paramGen );		
 	}

@@ -9,11 +9,11 @@ import com.google.common.base.Optional;
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.ShowingImport;
 
-public class MatImportTest extends EqualsHashCodeTestCase {
+public class MatMainImportTest extends EqualsHashCodeTestCase {
 
 	private final LocalDateTime now = LocalDateTime.now();
 	
-	public MatImportTest( String name ) {
+	public MatMainImportTest( String name ) {
 		super( name );
 	}
 

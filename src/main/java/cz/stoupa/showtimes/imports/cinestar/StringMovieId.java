@@ -4,6 +4,12 @@ import com.google.common.base.Objects;
 
 import cz.stoupa.showtimes.imports.internal.ExternalMovieId;
 
+/**
+ * External movie id represented with a String. Not to be used outside the import packages.
+ * 
+ * @author stoupa
+ *
+ */
 public class StringMovieId implements ExternalMovieId<String> {
 
 	private final String value; 

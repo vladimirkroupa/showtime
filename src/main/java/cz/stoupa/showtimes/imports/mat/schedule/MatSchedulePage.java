@@ -37,18 +37,19 @@ public class MatSchedulePage implements ShowingPage {
 	 */
 	@Override
 	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
-		logger.warn( "Using unoptimized showingsForDate method!" );
 		if ( ! knownShowingDates().contains( date ) ) {
 			logger.warn( "Page {} doesn't know showings for date {}.", this, date );
 			return Collections.emptyList();
 		}
-		return findShowingFromAll( date );
+		return findShowingFor( date );
 	}
 
 	/**
 	 * FIXME: unnecessary overhead, but unsure ATM if the method will be useful 
 	 */
-	private List<ShowingImport> findShowingFromAll( LocalDate date ) throws PageStructureException {
+	private List<ShowingImport> findShowingFor( LocalDate date ) throws PageStructureException {
+		logger.warn( "Using unoptimized showingsForDate method!" );
+	
 		List<ShowingImport> showingsOnDate = Lists.newArrayList();
 		for ( ShowingImport showing : allShowingsOnPage() ) {
 			LocalDate shownOn = showing.showingDate();  

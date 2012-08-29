@@ -44,7 +44,7 @@ public class ZemistrServiceTest {
 		expected.setName( "Ropáci" );
 		expected.setNames( names() );
 		expected.setPosters( Lists.newArrayList( "http://img.csfd.cz/posters/0/8807_1.jpg" ) );
-		expected.setAverage( "88" );
+		expected.setAverage( "89" );
 		expected.setGenre( Lists.newArrayList( "Krátkometrážní", "Fantasy" ) );
 		expected.setState( Lists.newArrayList( "Československo" ) );
 		expected.setYear( "1988" );

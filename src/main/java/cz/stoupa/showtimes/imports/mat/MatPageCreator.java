@@ -3,6 +3,8 @@ package cz.stoupa.showtimes.imports.mat;
 import java.io.IOException;
 
 import org.joda.time.LocalDate;
+import org.joda.time.Months;
+import org.joda.time.ReadablePeriod;
 import org.jsoup.nodes.Document;
 
 import com.google.inject.Inject;
@@ -24,9 +26,14 @@ public class MatPageCreator implements ShowingPageCreator {
 	}
 
 	@Override
-	public MatSchedulePage startingWith( LocalDate date ) throws IOException {
+	public MatSchedulePage createPageContaining( LocalDate date ) throws IOException {
 		Document webPage = fetcher.fetchWebPage( date );
 		return new MatSchedulePage( webPage, pageScraper );
 	}
-	
+
+    @Override
+    public ReadablePeriod showingsPeriodPerPage() {
+        return Months.ONE;
+    }
+
 }

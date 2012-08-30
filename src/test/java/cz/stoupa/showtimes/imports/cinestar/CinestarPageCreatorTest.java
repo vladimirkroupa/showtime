@@ -48,7 +48,7 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 			.expect( Method.POST, path )
 			.respondWith( 200, HTML_TEXT_UTF8, responseBody );
 		
-		testObject = pageCreator.startingWith( new LocalDate( 2012, 6, 28 ) );
+		testObject = pageCreator.createPageContaining(new LocalDate(2012, 6, 28));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	public static void main( String... args ) throws IOException, PageStructureException {
 
 		CinestarPageCreator instance = new CinestarPageCreator( "http://praha5.cinestar.cz/program_multikino.php" );
-		ShowingPage page = instance.startingWith( LocalDate.now().plusDays( 1 ) );
+		ShowingPage page = instance.createPageContaining(LocalDate.now().plusDays(1));
 		System.out.println( page.allShowingsOnPage() );
 	}
 }

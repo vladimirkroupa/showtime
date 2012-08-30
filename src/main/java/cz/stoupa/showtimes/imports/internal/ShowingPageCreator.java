@@ -3,6 +3,7 @@ package cz.stoupa.showtimes.imports.internal;
 import java.io.IOException;
 
 import org.joda.time.LocalDate;
+import org.joda.time.ReadablePeriod;
 
 /**
  * Factory for {@link ShowingPage}s. 
@@ -11,6 +12,8 @@ import org.joda.time.LocalDate;
  */
 public interface ShowingPageCreator {
 
-	ShowingPage startingWith( LocalDate date ) throws IOException;
-	
+	ShowingPage createPageContaining( LocalDate date ) throws IOException;
+
+    ReadablePeriod showingsPeriodPerPage();
+
 }

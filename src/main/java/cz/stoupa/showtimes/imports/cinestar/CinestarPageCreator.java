@@ -2,7 +2,9 @@ package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.ReadablePeriod;
 import org.jsoup.nodes.Document;
 
 import com.google.inject.Guice;
@@ -25,7 +27,7 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 public class CinestarPageCreator implements ShowingPageCreator {
 
 	// FIXME: push injector higher up
-	private Injector injector = Guice.createInjector(new CinestarModule());
+	private Injector injector = Guice.createInjector( new CinestarModule() );
 	
 	private WebPageFetcher fetcher;
 	private CinestarPageScraper pageScraper; 
@@ -36,7 +38,7 @@ public class CinestarPageCreator implements ShowingPageCreator {
 	}
 
 	@Override
-	public ShowingPage startingWith( LocalDate date ) throws IOException {
+	public ShowingPage createPageContaining(LocalDate date) throws IOException {
 		Document webPage = fetcher.fetchWebPage( date );
 		ShowingPage page = new CinestarPage( webPage, pageScraper );
 		return page;
@@ -44,9 +46,14 @@ public class CinestarPageCreator implements ShowingPageCreator {
 
 	// TODO: Guice?
 	private static WebPageFetcher assembleFetcher( String showingPageUrl ) {
-		UrlGenerator<Void> urlGen = new StaticUrlGenerator( null );
+		UrlGenerator urlGen = new StaticUrlGenerator( showingPageUrl );
 		PostParamsGenerator paramGen = new CinestarDayIdForgingPostParameterGenerator();
 		return new PostRequestPageFetcher( urlGen, paramGen );		
 	}
-	
+
+    @Override
+    public ReadablePeriod showingsPeriodPerPage() {
+        return Days.ONE;
+    }
+
 }

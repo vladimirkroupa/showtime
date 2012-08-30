@@ -41,7 +41,7 @@ public class MatImporter implements CinemaImporter {
 	public List<ShowingBuilder> getShowingsFor( LocalDate date ) throws ImportException {
 		throw new UnsupportedOperationException( "Fix interface!" );
 //		try {
-//			ShowingPage page = matPageCreator.startingWith( date );
+//			ShowingPage page = matPageCreator.createPageContaining( date );
 //			return page.showingsForDate( date );
 //		} catch ( PageStructureException | IOException e ) {
 //			throw new ImportException( "MatImporter import failed.", e );

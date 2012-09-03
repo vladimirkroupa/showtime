@@ -14,17 +14,19 @@ import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.internal.ImportException;
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
-import cz.stoupa.showtimes.imports.mat.schedule.MatShowingPageCreator;
+import cz.stoupa.showtimes.imports.mat.moviedetail.MatMovieDetailPageCreator;
 
 public class MatImporter implements CinemaImporter {
 
-	private final ShowingPageCreator matPageCreator;
+	private final ShowingPageCreator showingPageCreator;
+	private final MatMovieDetailPageCreator movieDetailPageCreator;
 	private final MatKnownDatesScanner dateScanner;
 	
 	public MatImporter() {
 		// FIXME: push injector creation higher up
 		Injector injector = Guice.createInjector( new MatModule() );
-		matPageCreator = injector.getInstance( MatShowingPageCreator.class );
+		showingPageCreator = injector.getInstance( ShowingPageCreator.class );
+		movieDetailPageCreator = injector.getInstance( MatMovieDetailPageCreator.class );
 		dateScanner = injector.getInstance( MatKnownDatesScanner.class );
 	}
 

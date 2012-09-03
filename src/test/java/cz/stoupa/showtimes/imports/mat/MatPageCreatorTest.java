@@ -63,7 +63,7 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 			.expect( Method.GET, path )
 			.respondWith( 200, HTML_TEXT_UTF8, responseBody );
 		
-		testObject = pageCreator.createPageContaining(new LocalDate(2012, 6, 28));
+		testObject = pageCreator.createShowingPageContaining(new LocalDate(2012, 6, 28));
 	}
 	
 	@Test

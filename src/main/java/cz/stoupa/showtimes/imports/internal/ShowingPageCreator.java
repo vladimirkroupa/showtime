@@ -12,7 +12,7 @@ import org.joda.time.ReadablePeriod;
  */
 public interface ShowingPageCreator {
 
-	ShowingPage createPageContaining( LocalDate date ) throws IOException;
+	ShowingPage createShowingPageContaining( LocalDate date ) throws IOException;
 
     ReadablePeriod showingsPeriodPerPage();
 

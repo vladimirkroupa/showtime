@@ -27,7 +27,7 @@ public class MatPageCreator implements ShowingPageCreator {
 	}
 
 	@Override
-	public MatSchedulePage createPageContaining( LocalDate date ) throws IOException {
+	public MatSchedulePage createShowingPageContaining( LocalDate date ) throws IOException {
 		String url = urlGenerator.prepareUrl( date );
         Document webPage = pageFetcher.fetchPage( url );
 		return new MatSchedulePage( webPage, pageScraper );

@@ -38,7 +38,7 @@ public class CinestarPageCreator implements ShowingPageCreator {
 	}
 
 	@Override
-	public ShowingPage createPageContaining( LocalDate date ) throws IOException {
+	public ShowingPage createShowingPageContaining( LocalDate date ) throws IOException {
 		Document document = pageFetcher.fetchPage( showingPageUrl, prepareParams( date ) );
 		return new CinestarPage( document, pageScraper );
 	}

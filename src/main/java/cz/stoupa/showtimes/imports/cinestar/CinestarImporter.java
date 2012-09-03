@@ -9,9 +9,9 @@ import org.joda.time.LocalDate;
 
 import com.google.inject.Inject;
 
-import cz.stoupa.showtimes.domain.Showing.ShowingBuilder;
 import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ImportException;
 
 public class CinestarImporter implements CinemaImporter {
@@ -36,7 +36,7 @@ public class CinestarImporter implements CinemaImporter {
 	}
 
 	@Override
-	public List<ShowingBuilder> getShowingsFor( LocalDate date ) throws ImportException {
+	public List<ShowingImport.Builder> importShowingsFor( LocalDate date ) throws ImportException {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Fix interface!");
 	}

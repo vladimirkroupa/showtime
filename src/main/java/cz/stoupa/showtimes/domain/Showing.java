@@ -11,7 +11,7 @@ public class Showing {
 	private final LocalDateTime dateTime;
 	private final Translation translation;
 
-	public Showing( ShowingBuilder builder ) {
+	public Showing( Builder builder ) {
 		this.movie = checkNotNull( builder.buildMovie() );
 		this.dateTime = checkNotNull( builder.buildDateTime() );
 		this.cinema = checkNotNull( builder.buildCinema() );
@@ -34,7 +34,7 @@ public class Showing {
 		return translation;
 	}
 	
-	public interface ShowingBuilder {
+	public static interface Builder {
 		Movie buildMovie();
 		Cinema buildCinema();
 		LocalDateTime buildDateTime();

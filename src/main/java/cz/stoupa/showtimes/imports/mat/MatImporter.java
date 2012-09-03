@@ -9,10 +9,11 @@ import org.joda.time.LocalDate;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import cz.stoupa.showtimes.domain.Showing.ShowingBuilder;
 import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
+import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ImportException;
+import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
 import cz.stoupa.showtimes.imports.mat.moviedetail.MatMovieDetailPageCreator;
 
@@ -40,14 +41,16 @@ public class MatImporter implements CinemaImporter {
 	}
 
 	@Override
-	public List<ShowingBuilder> getShowingsFor( LocalDate date ) throws ImportException {
-		throw new UnsupportedOperationException( "Fix interface!" );
-//		try {
+	public List<ShowingImport.Builder> importShowingsFor( LocalDate date ) throws ImportException {
+		throw new UnsupportedOperationException( "FIXME!" );
+		//		try {
 //			ShowingPage page = matPageCreator.createPageContaining( date );
 //			return page.showingsForDate( date );
 //		} catch ( PageStructureException | IOException e ) {
 //			throw new ImportException( "MatImporter import failed.", e );
 //		}
 	}
+	
+	//private List<ShowingImport.Builder>
 
 }

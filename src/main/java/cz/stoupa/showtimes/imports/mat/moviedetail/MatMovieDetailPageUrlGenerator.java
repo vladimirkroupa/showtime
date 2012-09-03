@@ -1,6 +1,7 @@
 package cz.stoupa.showtimes.imports.mat.moviedetail;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import cz.stoupa.showtimes.imports.StringMovieId;
 
@@ -11,7 +12,7 @@ public class MatMovieDetailPageUrlGenerator {
 	private final String movieDetailUrl;
 	
 	@Inject
-	public MatMovieDetailPageUrlGenerator( String movieDetailUrl ) {
+	public MatMovieDetailPageUrlGenerator( @Named("movieDetailUrl") String movieDetailUrl ) {
 		this.movieDetailUrl = movieDetailUrl;
 	}
 

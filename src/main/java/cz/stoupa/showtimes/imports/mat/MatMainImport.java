@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
 
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.ShowingImport;
-import cz.stoupa.showtimes.imports.cinestar.StringMovieId;
+import cz.stoupa.showtimes.imports.StringMovieId;
 import cz.stoupa.showtimes.imports.internal.ExternalMovieId;
 import cz.stoupa.showtimes.imports.internal.HasTheaterMovieId;
 import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;

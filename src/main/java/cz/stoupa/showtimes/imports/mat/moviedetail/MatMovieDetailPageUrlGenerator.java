@@ -2,7 +2,7 @@ package cz.stoupa.showtimes.imports.mat.moviedetail;
 
 import com.google.inject.Inject;
 
-import cz.stoupa.showtimes.imports.cinestar.StringMovieId;
+import cz.stoupa.showtimes.imports.StringMovieId;
 
 public class MatMovieDetailPageUrlGenerator {
 

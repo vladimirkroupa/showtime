@@ -1,4 +1,4 @@
-package cz.stoupa.showtimes.imports.cinestar;
+package cz.stoupa.showtimes.imports;
 
 import com.google.common.base.Objects;
 

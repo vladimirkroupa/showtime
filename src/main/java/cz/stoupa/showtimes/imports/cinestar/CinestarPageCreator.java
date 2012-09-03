@@ -1,22 +1,20 @@
 package cz.stoupa.showtimes.imports.cinestar;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.ReadablePeriod;
 import org.jsoup.nodes.Document;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
+import cz.stoupa.showtimes.imports.internal.fetcher.PostPageFetcher;
 import cz.stoupa.showtimes.imports.internal.fetcher.PostParamsGenerator;
-import cz.stoupa.showtimes.imports.internal.fetcher.PostRequestPageFetcher;
-import cz.stoupa.showtimes.imports.internal.fetcher.StaticUrlGenerator;
-import cz.stoupa.showtimes.imports.internal.fetcher.UrlGenerator;
-import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
 
 /**
  * Creator for {@link CinestarPage}.
@@ -26,29 +24,27 @@ import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
  */
 public class CinestarPageCreator implements ShowingPageCreator {
 
-	// FIXME: push injector higher up
-	private Injector injector = Guice.createInjector( new CinestarModule() );
-	
-	private WebPageFetcher fetcher;
-	private CinestarPageScraper pageScraper; 
+	private final String showingPageUrl;
+	private final CinestarPageScraper pageScraper;
+	private final PostPageFetcher pageFetcher;
+	private final PostParamsGenerator paramGen;
 
-	public CinestarPageCreator( String showingPageUrl ) {
-		this.fetcher = assembleFetcher( showingPageUrl );
-		this.pageScraper = injector.getInstance( CinestarPageScraper.class );
+	@Inject
+	public CinestarPageCreator( @Named("showingPageUrl") String showingPageUrl, CinestarPageScraper pageScraper, PostPageFetcher pageFetcher, PostParamsGenerator paramGen ) {
+		this.showingPageUrl = showingPageUrl;
+		this.pageScraper = pageScraper;
+		this.pageFetcher = pageFetcher;
+		this.paramGen = paramGen;
 	}
 
 	@Override
-	public ShowingPage createPageContaining(LocalDate date) throws IOException {
-		Document webPage = fetcher.fetchWebPage( date );
-		ShowingPage page = new CinestarPage( webPage, pageScraper );
-		return page;
+	public ShowingPage createPageContaining( LocalDate date ) throws IOException {
+		Document document = pageFetcher.fetchPage( showingPageUrl, prepareParams( date ) );
+		return new CinestarPage( document, pageScraper );
 	}
 
-	// TODO: Guice?
-	private static WebPageFetcher assembleFetcher( String showingPageUrl ) {
-		UrlGenerator urlGen = new StaticUrlGenerator( showingPageUrl );
-		PostParamsGenerator paramGen = new CinestarDayIdForgingPostParameterGenerator();
-		return new PostRequestPageFetcher( urlGen, paramGen );		
+	private Map<String, String> prepareParams( LocalDate date ) {
+		return paramGen.prepareParams( date );
 	}
 
     @Override

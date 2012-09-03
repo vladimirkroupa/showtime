@@ -6,9 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.inject.Inject;
 
-import cz.stoupa.showtimes.imports.internal.fetcher.UrlGenerator;
-
-public class MatSchedulePageUrlGenerator implements UrlGenerator<LocalDate> {
+public class MatSchedulePageUrlGenerator {
 
 	public static final String QUERY_STRING_BASE = "?from=";
 	
@@ -19,7 +17,6 @@ public class MatSchedulePageUrlGenerator implements UrlGenerator<LocalDate> {
 		this.showingBaseUrl = showingBaseUrl;
 	}
 
-	@Override
 	public String prepareUrl( LocalDate date ) {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern( "yyyy-MM-dd" );
 		String dateStr = fmt.print( date );

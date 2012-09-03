@@ -17,6 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.domain.Translation;
@@ -36,10 +41,23 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	
 	private CinestarPageCreator pageCreator;
 	private ShowingPage testObject;
+
+	public void initTestObject() {
+		AbstractModule testModule = new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind( String.class )
+				.annotatedWith( Names.named( "showingPageUrl" ) )
+				.toInstance( SHOWINGS_URL );
+			}
+		};
+		Injector injector = Guice.createInjector( Modules.override( new CinestarModule() ).with( testModule ) );
+		pageCreator = injector.getInstance( CinestarPageCreator.class );		
+	}
 	
 	@Before
 	public void init() throws Exception {
-		pageCreator = new CinestarPageCreator( SHOWINGS_URL ); 
+		initTestObject();
 		
 		String responseBody = TestResources.utf8ResourceAsString( "cinestarPraha5Aug2012.html" );
 		String path = "/";
@@ -48,7 +66,7 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 			.expect( Method.POST, path )
 			.respondWith( 200, HTML_TEXT_UTF8, responseBody );
 		
-		testObject = pageCreator.createPageContaining(new LocalDate(2012, 6, 28));
+		testObject = pageCreator.createPageContaining( new LocalDate( 2012, 6, 28 ) );
 	}
 
 	@Test
@@ -136,8 +154,8 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	// FIXME: predelat na integracni test?
 	public static void main( String... args ) throws IOException, PageStructureException {
 
-		CinestarPageCreator instance = new CinestarPageCreator( "http://praha5.cinestar.cz/program_multikino.php" );
-		ShowingPage page = instance.createPageContaining(LocalDate.now().plusDays(1));
-		System.out.println( page.allShowingsOnPage() );
+		//CinestarPageCreator instance = new CinestarPageCreator( "http://praha5.cinestar.cz/program_multikino.php" );
+		//ShowingPage page = instance.createPageContaining(LocalDate.now().plusDays(1));
+		//System.out.println( page.allShowingsOnPage() );
 	}
 }

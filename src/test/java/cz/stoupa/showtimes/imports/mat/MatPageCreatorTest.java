@@ -39,8 +39,8 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 	private MatPageCreator pageCreator;
 	private ShowingPage testObject;
 	
-	private void init() {
-		AbstractModule testModule =  new AbstractModule() {
+	private void initTestObject() {
+		AbstractModule testModule = new AbstractModule() {
 			@Override
 			protected void configure() {
 				bind( String.class )
@@ -53,8 +53,8 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 	}
 
 	@Before
-	public void preparePage() throws IOException {
-		init();
+	public void init() throws IOException {
+		initTestObject();
 
 		String responseBody = TestResources.utf8ResourceAsString( "matAug2012partial.html" );
 		String path = MatSchedulePageUrlGenerator.QUERY_STRING_BASE + "2012-06-28";

@@ -11,12 +11,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
 
@@ -25,14 +27,20 @@ public class MatKnownDatesScannerTest extends MockHttpServerTest {
 	private static final String CONTENT_BASE_URL = "/matclub/cz/kino/mesicni-program";
 	
 	private MatKnownDatesScanner testObject;
-	private Injector injector;
 	
 	@Before
 	public void init() {
-		injector = Guice.createInjector( new MatModule() );
-		MatSchedulePageScraper pageScraper = injector.getInstance( MatSchedulePageScraper.class );
-		String url = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT + CONTENT_BASE_URL;
-		testObject = new MatKnownDatesScanner( url, pageScraper );
+		final String url = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT + CONTENT_BASE_URL;
+		AbstractModule testModule = new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind( String.class )
+				.annotatedWith( Names.named( "showingPageUrl" ) )
+				.toInstance( url );
+			}
+		};
+		Injector injector = Guice.createInjector( Modules.override( new MatModule() ).with( testModule ) );
+		testObject = injector.getInstance( MatKnownDatesScanner.class );
 	}
 
 	@Test

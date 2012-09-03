@@ -1,33 +1,35 @@
 package cz.stoupa.showtimes.imports.mat;
 
-import java.io.IOException;
-
+import com.google.inject.Inject;
+import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
+import cz.stoupa.showtimes.imports.internal.fetcher.GetPageFetcher;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePage;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
+import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.ReadablePeriod;
 import org.jsoup.nodes.Document;
 
-import com.google.inject.Inject;
-
-import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
-import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
-import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePage;
-import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
+import java.io.IOException;
 
 public class MatPageCreator implements ShowingPageCreator {
 
-	private WebPageFetcher fetcher;
-	private MatSchedulePageScraper pageScraper;
+	private final GetPageFetcher pageFetcher;
+	private final MatSchedulePageUrlGenerator urlGenerator;
+	private final MatSchedulePageScraper pageScraper;
 	
 	@Inject
-	public MatPageCreator( WebPageFetcher fetcher, MatSchedulePageScraper pageScraper ) {
-		this.fetcher = fetcher;
+	public MatPageCreator( MatSchedulePageUrlGenerator urlGenerator, MatSchedulePageScraper pageScraper, GetPageFetcher pageFetcher ) {
+		this.urlGenerator = urlGenerator;
 		this.pageScraper = pageScraper;
+		this.pageFetcher = pageFetcher;
 	}
 
 	@Override
 	public MatSchedulePage createPageContaining( LocalDate date ) throws IOException {
-		Document webPage = fetcher.fetchWebPage( date );
+		String url = urlGenerator.prepareUrl( date );
+        Document webPage = pageFetcher.fetchPage( url );
 		return new MatSchedulePage( webPage, pageScraper );
 	}
 
@@ -35,5 +37,5 @@ public class MatPageCreator implements ShowingPageCreator {
     public ReadablePeriod showingsPeriodPerPage() {
         return Months.ONE;
     }
-
+    
 }

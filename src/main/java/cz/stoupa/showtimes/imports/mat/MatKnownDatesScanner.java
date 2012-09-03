@@ -13,8 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
-import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.imports.internal.fetcher.GetPageFetcher;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 
 public class MatKnownDatesScanner {
@@ -23,11 +22,13 @@ public class MatKnownDatesScanner {
 	
 	private final MatSchedulePageScraper pageScraper;
 	private final String showingPageUrl;
+	private final GetPageFetcher pageFetcher;
 
 	@Inject
-	MatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatSchedulePageScraper pageScraper ) {
+	MatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatSchedulePageScraper pageScraper, GetPageFetcher pageFetcher ) {
 		this.pageScraper = pageScraper;
 		this.showingPageUrl = showingPageUrl;
+		this.pageFetcher = pageFetcher;
 	}
 
 	public SortedSet<LocalDate> findKnownDates() throws IOException, PageStructureException {
@@ -69,11 +70,8 @@ public class MatKnownDatesScanner {
 		return nextPageUrl;
 	}
 	
-	// TODO: DRY
-	// TODO: guice - PageFetcher?
 	private Document fetchPage( String url ) throws IOException {
-		WebPageFetcher fetcher = new GetRequestPageFetcher( url );
-		return fetcher.fetchWebPage( LocalDate.now() ); // FIXME: date se k nicemu nepouziva
+		return pageFetcher.fetchPage( url );
 	}
 	
 }

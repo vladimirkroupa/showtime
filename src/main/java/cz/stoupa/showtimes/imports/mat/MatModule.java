@@ -5,8 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
-import cz.stoupa.showtimes.imports.internal.fetcher.GetRequestPageFetcher;
-import cz.stoupa.showtimes.imports.internal.fetcher.WebPageFetcher;
+import cz.stoupa.showtimes.imports.internal.fetcher.GetPageFetcher;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 
@@ -19,22 +18,21 @@ public class MatModule extends AbstractModule {
 		bind( MatSchedulePageScraper.class );
 		bind( MatDateTimeParser.class );
 		bind( MatPageCreator.class );
+		bind( MatPageCreator.class );
 		bind( String.class )
 			.annotatedWith( Names.named( "showingPageUrl" ) )
 			.toInstance( SHOWING_PAGE_URL );
+		bind( GetPageFetcher.class ); // TODO: multiple bindings in modules
 	}
 	
-	 @Provides 
-	 WebPageFetcher provideWebPageFetcher( @Named("showingPageUrl") String showingPageUrl ) {
-		MatSchedulePageUrlGenerator urlGenerator = new MatSchedulePageUrlGenerator( showingPageUrl );
-		return new GetRequestPageFetcher( urlGenerator );
-	  }
-	 
-	 @Provides 
-	 MatKnownDatesScanner provideMatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl,
-			 MatSchedulePageScraper pageScraper ) {
-		MatKnownDatesScanner instance = new MatKnownDatesScanner( showingPageUrl, pageScraper );
-		return instance;
-	 }
+	@Provides 
+	MatKnownDatesScanner provideMatKnownDatesScanner( @Named("showingPageUrl") String showingPageUrl, MatSchedulePageScraper pageScraper, GetPageFetcher pageFetcher ) {
+		return new MatKnownDatesScanner( showingPageUrl, pageScraper, pageFetcher );
+	}
+	
+	@Provides 
+	MatSchedulePageUrlGenerator provideMatSchedulePageUrlGenerator( @Named("showingPageUrl") String showingPageUrl ) {
+		return new MatSchedulePageUrlGenerator( showingPageUrl );
+	}
 	
 }

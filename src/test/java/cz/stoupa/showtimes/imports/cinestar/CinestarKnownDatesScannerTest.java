@@ -16,8 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
 import cz.stoupa.showtimes.imports.PageStructureException;
@@ -31,14 +34,20 @@ public class CinestarKnownDatesScannerTest extends MockHttpServerTest {
 	
 	private static final String SHOWINGS_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
-	private Injector injector;
 	private CinestarKnownDatesScanner testObject;
 	
 	@Before
 	public void init() throws IOException {
-		injector = Guice.createInjector( new CinestarModule() );
-		CinestarDateTimeParser parser = injector.getInstance( CinestarDateTimeParser.class );
-		testObject = new CinestarKnownDatesScanner( SHOWINGS_URL, parser );
+		AbstractModule testModule = new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind( String.class )
+				.annotatedWith( Names.named( "showingPageUrl" ) )
+				.toInstance( SHOWINGS_URL );
+			}
+		};
+		Injector injector = Guice.createInjector( Modules.override( new CinestarModule() ).with( testModule ) );
+		testObject = injector.getInstance( CinestarKnownDatesScanner.class );
 	}
 	
 	@Test

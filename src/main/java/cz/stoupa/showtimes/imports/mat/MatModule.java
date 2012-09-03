@@ -6,6 +6,7 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
 import cz.stoupa.showtimes.imports.internal.fetcher.GetPageFetcher;
+import cz.stoupa.showtimes.imports.mat.schedule.MatShowingPageCreator;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 
@@ -17,8 +18,7 @@ public class MatModule extends AbstractModule {
 	protected void configure() {
 		bind( MatSchedulePageScraper.class );
 		bind( MatDateTimeParser.class );
-		bind( MatPageCreator.class );
-		bind( MatPageCreator.class );
+		bind( MatShowingPageCreator.class );
 		bind( String.class )
 			.annotatedWith( Names.named( "showingPageUrl" ) )
 			.toInstance( SHOWING_PAGE_URL );

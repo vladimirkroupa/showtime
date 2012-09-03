@@ -25,6 +25,7 @@ import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
+import cz.stoupa.showtimes.imports.mat.schedule.MatShowingPageCreator;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
@@ -36,7 +37,7 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 	
 	private static final String SHOWINGS_TEST_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
-	private MatPageCreator pageCreator;
+	private MatShowingPageCreator pageCreator;
 	private ShowingPage testObject;
 	
 	private void initTestObject() {
@@ -49,7 +50,7 @@ public class MatPageCreatorTest extends MockHttpServerTest {
 			}
 		};
 		Injector injector = Guice.createInjector( Modules.override( new MatModule() ).with( testModule ) );
-		pageCreator = injector.getInstance( MatPageCreator.class );
+		pageCreator = injector.getInstance( MatShowingPageCreator.class );
 	}
 
 	@Before

@@ -23,6 +23,8 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
+import cz.stoupa.showtimes.domain.CountryRepository;
+import cz.stoupa.showtimes.domain.fake.CountryRepositoryFake;
 import cz.stoupa.showtimes.imports.PageStructureException;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
@@ -42,8 +44,9 @@ public class CinestarKnownDatesScannerTest extends MockHttpServerTest {
 			@Override
 			protected void configure() {
 				bind( String.class )
-				.annotatedWith( Names.named( "showingPageUrl" ) )
-				.toInstance( SHOWINGS_URL );
+					.annotatedWith( Names.named( "showingPageUrl" ) )
+					.toInstance( SHOWINGS_URL );
+				bind( CountryRepository.class).to( CountryRepositoryFake.class );
 			}
 		};
 		Injector injector = Guice.createInjector( Modules.override( new CinestarModule() ).with( testModule ) );

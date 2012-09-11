@@ -35,11 +35,11 @@ public class MatKnownDatesScannerTest extends MockHttpServerTest {
 			@Override
 			protected void configure() {
 				bind( String.class )
-				.annotatedWith( Names.named( "showingPageUrl" ) )
-				.toInstance( url );
+					.annotatedWith( Names.named( "showingPageUrl" ) )
+					.toInstance( url );
 			}
 		};
-		Injector injector = Guice.createInjector( Modules.override( new MatModule() ).with( testModule ) );
+		Injector injector = Guice.createInjector( Modules.override( new MatFakeModule() ).with( testModule ) );
 		testObject = injector.getInstance( MatKnownDatesScanner.class );
 	}
 

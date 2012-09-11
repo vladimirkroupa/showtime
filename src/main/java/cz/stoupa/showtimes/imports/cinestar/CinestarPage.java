@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 
 public class CinestarPage implements ShowingPage {
@@ -43,8 +43,8 @@ public class CinestarPage implements ShowingPage {
 	}
 	
 	@Override
-	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
-		return showingDateOk( date ) ? allShowingsOnPage() : Collections.<ShowingImport>emptyList();
+	public List<Showing.Builder> showingsForDate( LocalDate date ) throws PageStructureException {
+		return showingDateOk( date ) ? allShowingsOnPage() : Collections.<Showing.Builder>emptyList();
 	}
 
 	private boolean showingDateOk( LocalDate date ) {
@@ -74,7 +74,7 @@ public class CinestarPage implements ShowingPage {
 	}
 	
 	@Override
-	public List<ShowingImport> allShowingsOnPage() throws PageStructureException {
+	public List<Showing.Builder> allShowingsOnPage() throws PageStructureException {
 		return pageScraper.extractAllShowings( page );
 	}
 

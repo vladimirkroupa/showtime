@@ -1,7 +1,15 @@
 package cz.stoupa.showtimes.domain;
 
+import com.google.common.base.Optional;
+
 public interface CountryRepository {
 
-	Country findByIso( String iso );
+	Optional<Country> findByIso( String iso );
+
+	Country czechRepublic();
+	
+	Country unitedStates();
+	
+	Country unknown();
 	
 }

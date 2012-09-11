@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.joda.time.LocalDate;
 
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 
 /**
  * Abstraction of a web page containing showings.
@@ -17,8 +17,8 @@ public interface ShowingPage {
 
 	Set<LocalDate> knownShowingDates() throws PageStructureException;
 	
-	List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException;
+	List<Showing.Builder> showingsForDate( LocalDate date ) throws PageStructureException;
 
-	List<ShowingImport> allShowingsOnPage() throws PageStructureException;
+	List<Showing.Builder> allShowingsOnPage() throws PageStructureException;
 
 }

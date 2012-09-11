@@ -17,9 +17,12 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import cz.stoupa.showtimes.domain.CountryRepository;
+import cz.stoupa.showtimes.domain.Movie;
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.domain.Translation;
+import cz.stoupa.showtimes.external.ExternalMovieRepository;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 import cz.stoupa.showtimes.util.Indexes;
 import cz.stoupa.showtimes.util.JodaTimeUtil;
@@ -36,13 +39,15 @@ public class CinestarPageScraper {
 	private static final Logger logger = LoggerFactory.getLogger( CinestarPageScraper.class );
 
 	private final CinestarDateTimeParser dateTimeParser;
+	private final CountryRepository countryRepository;
 	
 	@Inject
-	public CinestarPageScraper( CinestarDateTimeParser dateTimeParser ) {
+	public CinestarPageScraper( CinestarDateTimeParser dateTimeParser, CountryRepository countryRepository ) {
 		this.dateTimeParser = dateTimeParser;
+		this.countryRepository = countryRepository;
 	}
 
-	public List<ShowingImport> extractAllShowings( Document page ) throws PageStructureException {
+	public List<Showing.Builder> extractAllShowings( Document page ) throws PageStructureException {
 		Elements showingRows = page.select( "table.table-program tbody tr:has(td.name)" );
 		if ( showingRows.isEmpty() ) {
 			// TODO: page.toString() ?
@@ -60,25 +65,32 @@ public class CinestarPageScraper {
 		return date;
 	}	
 	
-	private List<ShowingImport> parseShowingRows( Elements rows, LocalDate showingDate ) throws PageStructureException {
-		List<ShowingImport> result = Lists.newArrayList();
+	private List<Showing.Builder> parseShowingRows( Elements rows, LocalDate showingDate ) throws PageStructureException {
+		List<Showing.Builder> result = Lists.newArrayList();
 		for ( Element row : rows ) {
-			List<ShowingImport> rowShowings = parseSingleRow( row, showingDate );
+			List<Showing.Builder> rowShowings = parseSingleRow( row, showingDate );
 			result.addAll( rowShowings );
 		}
 		return result;
 	}
 	
-	private List<ShowingImport> parseSingleRow( Element row, LocalDate showingDate ) throws PageStructureException {
+	private List<Showing.Builder> parseSingleRow( Element row, LocalDate showingDate ) throws PageStructureException {
 		String title = parseMovieTitle( row );
 		List<LocalTime> showingTimes = parseMovieShowingTimes( row );
 		Translation translation = parseMovieTranslation( row );
 		String externalId = parseExternalId( row );
-		List<ShowingImport> result = Lists.newArrayList();
+		List<Showing.Builder> result = Lists.newArrayList();
 		for ( LocalTime time : showingTimes ) {
 			LocalDate showingDay = showingDate;
 			LocalDateTime when = JodaTimeUtil.newLocalDateTime( showingDay, time );
-			CinestarMainImport showing = new CinestarMainImport( when, title, translation, externalId );
+			
+			Movie.Builder movie = new Movie.Builder()
+				.addTitle( countryRepository.czechRepublic(), title )
+				.addExternalId( ExternalMovieRepository.CINESTAR, externalId );
+			Showing.Builder showing = new Showing.Builder()
+				.dateTime( when )
+				.translation( translation )
+				.addMovieBuilder( movie );
 			result.add( showing );
 		}
 		return result;

@@ -1,17 +1,13 @@
 package cz.stoupa.showtimes.imports.mat;
 
-import java.util.Objects;
-
 import org.joda.time.LocalDateTime;
 
-import com.google.common.base.Optional;
-
+import cz.stoupa.showtimes.domain.CountryRepository;
+import cz.stoupa.showtimes.domain.Movie;
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.domain.Translation;
-import cz.stoupa.showtimes.imports.ShowingImport;
-import cz.stoupa.showtimes.imports.StringMovieId;
-import cz.stoupa.showtimes.imports.internal.ExternalMovieId;
-import cz.stoupa.showtimes.imports.internal.HasTheaterMovieId;
-import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;
+import cz.stoupa.showtimes.external.ExternalMovieRepository;
+import cz.stoupa.showtimes.util.ReflectionObject;
 
 /**
  * Import from Mat showing page. 
@@ -19,57 +15,34 @@ import cz.stoupa.showtimes.imports.internal.OrigMovieTitleAware;
  * @author stoupa
  *
  */
-public class MatMainImport extends ShowingImport implements OrigMovieTitleAware, HasTheaterMovieId<String> {
+public class MatMainImport extends ReflectionObject {
 
-	private final StringMovieId externalMovieId;
+	private final LocalDateTime showingDateTime;
+	private final Translation translation;
 	
-	public MatMainImport(
+	private final String czechTitle;
+	private final String externalMovieId;
+	
+	public MatMainImport( 
 			LocalDateTime showingDateTime,
-			String czechTitle,
-			String originalTitle,
-			Translation translation,
-			String matMovieId ) {
-		super( showingDateTime, czechTitle, translation, 
-				Optional.of( originalTitle ), Optional.<Integer>absent() );
-		this.externalMovieId = new StringMovieId( matMovieId );
+			Translation translation, 
+			String czechTitle, 
+			String externalMovieId
+			) {
+		this.showingDateTime = showingDateTime;
+		this.translation = translation;
+		this.czechTitle = czechTitle;
+		this.externalMovieId = externalMovieId;
 	}
 
-	@Override
-	public String originalTitle() {
-		return originalTitleMaybe().get();
-	}
-
-	@Override
-	public ExternalMovieId<String> theaterMovieId() {
-		return externalMovieId;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash( externalMovieId, super.hashCode() );
-	}
-
-	@Override
-	public boolean canEqual( Object other ) {
-		return other instanceof MatMainImport;
-	}
-
-	@Override
-	public boolean equals( Object other ) {
-		if ( other == this ) return true;
-	    if ( other == null ) return false;
-	    if ( !( other instanceof MatMainImport ) ) return false;
-	    final MatMainImport that = (MatMainImport) other;
-	    if ( ! that.canEqual( this ) ) return false;
-	    return Objects.equals( externalMovieId, that.externalMovieId )
-	    		&& super.equals( that );
-	}
-	
-	@Override
-	public String toString() {
-		return toStringHelper()
-		.add( "matMovieId", externalMovieId )
-		.toString();
+	public Showing.Builder toShowingBuilder( CountryRepository countryRepository ) {
+		Showing.Builder showingBuilder = new Showing.Builder();
+		showingBuilder.dateTime( showingDateTime ).translation( translation );
+		Movie.Builder movieBuilder = new Movie.Builder()
+			.addTitle( countryRepository.czechRepublic(), czechTitle )
+			.addExternalId( ExternalMovieRepository.MAT, externalMovieId );
+		showingBuilder.addMovieBuilder( movieBuilder );
+		return showingBuilder;
 	}
 
 }

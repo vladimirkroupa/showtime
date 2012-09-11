@@ -95,11 +95,5 @@ public abstract class ShowingImport {
 		.add( "year", year )
 		.add( "translation", translation );
 	}
-	
-	public static interface Builder {
-		LocalDateTime buildShowingDateTime();
-		Translation buildTranslation();
-		MovieImport buildMovieImport();
-	}
 
 }

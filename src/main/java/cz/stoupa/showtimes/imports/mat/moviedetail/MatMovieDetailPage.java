@@ -2,11 +2,10 @@ package cz.stoupa.showtimes.imports.mat.moviedetail;
 
 import org.jsoup.nodes.Document;
 
-import cz.stoupa.showtimes.domain.Year;
+import cz.stoupa.showtimes.domain.Movie;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.internal.MovieYearAware;
 
-public class MatMovieDetailPage implements MovieYearAware {
+public class MatMovieDetailPage {
 
 	private final MatMovieDetailPageScraper pageScraper;
 	private final Document page;
@@ -16,9 +15,8 @@ public class MatMovieDetailPage implements MovieYearAware {
 		this.page = page;
 	}
 	
-	@Override
-	public Year movieYear() throws PageStructureException {
-		return pageScraper.extractMovieReleaseYear( page );
+	public Movie.Builder movieYear() throws PageStructureException {
+		return pageScraper.extractAdditionalMovieInfo( page );
 	}
 
 }

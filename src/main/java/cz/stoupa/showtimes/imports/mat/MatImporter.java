@@ -9,9 +9,9 @@ import org.joda.time.LocalDate;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.imports.CinemaImporter;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ImportException;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.imports.internal.ShowingPageCreator;
@@ -23,9 +23,9 @@ public class MatImporter implements CinemaImporter {
 	private final MatMovieDetailPageCreator movieDetailPageCreator;
 	private final MatKnownDatesScanner dateScanner;
 	
-	public MatImporter() {
+	public MatImporter( MatBaseModule module ) {
 		// FIXME: push injector creation higher up
-		Injector injector = Guice.createInjector( new MatModule() );
+		Injector injector = Guice.createInjector( module );
 		showingPageCreator = injector.getInstance( ShowingPageCreator.class );
 		movieDetailPageCreator = injector.getInstance( MatMovieDetailPageCreator.class );
 		dateScanner = injector.getInstance( MatKnownDatesScanner.class );
@@ -41,16 +41,14 @@ public class MatImporter implements CinemaImporter {
 	}
 
 	@Override
-	public List<ShowingImport.Builder> importShowingsFor( LocalDate date ) throws ImportException {
-		throw new UnsupportedOperationException( "FIXME!" );
-		//		try {
-//			ShowingPage page = matPageCreator.createPageContaining( date );
-//			return page.showingsForDate( date );
-//		} catch ( PageStructureException | IOException e ) {
-//			throw new ImportException( "MatImporter import failed.", e );
-//		}
+	public List<Showing.Builder> importShowingsFor( LocalDate date ) throws ImportException {
+		//throw new UnsupportedOperationException( "TODO!" );
+		try {
+			ShowingPage page = showingPageCreator.createShowingPageContaining( date );
+			return page.showingsForDate( date );
+		} catch ( PageStructureException | IOException e ) {
+			throw new ImportException( "MatImporter import failed.", e );
+		}
 	}
 	
-	//private List<ShowingImport.Builder>
-
 }

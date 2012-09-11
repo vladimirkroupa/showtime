@@ -5,13 +5,16 @@ import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
+import cz.stoupa.showtimes.domain.CountryRepository;
 import cz.stoupa.showtimes.imports.internal.fetcher.GetPageFetcher;
+import cz.stoupa.showtimes.imports.mat.moviedetail.MatCountryNameRepository;
+import cz.stoupa.showtimes.imports.mat.moviedetail.MatCountryNameRepositoryFake;
 import cz.stoupa.showtimes.imports.mat.moviedetail.MatMovieDetailPageCreator;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageScraper;
 import cz.stoupa.showtimes.imports.mat.schedule.MatSchedulePageUrlGenerator;
 import cz.stoupa.showtimes.imports.mat.schedule.MatShowingPageCreator;
 
-public class MatModule extends AbstractModule {
+public abstract class MatBaseModule extends AbstractModule {
 
 	static final String SHOWING_PAGE_URL = "http://www.mat.cz/matclub/cz/kino/mesicni-program";
 	static final String MOVIE_DETAIL_PAGE_URL = "http://www.mat.cz/matclub/cz/kino/mesicni-program";
@@ -29,6 +32,8 @@ public class MatModule extends AbstractModule {
 			.annotatedWith( Names.named( "movieDetailUrl" ) )
 			.toInstance( MOVIE_DETAIL_PAGE_URL );		
 		bind( GetPageFetcher.class ); // TODO: multiple bindings in modules
+		bind( CountryRepository.class).to( countryRepository() );
+		bind( MatCountryNameRepository.class).to( MatCountryNameRepositoryFake.class );
 	}
 	
 	@Provides 
@@ -40,5 +45,9 @@ public class MatModule extends AbstractModule {
 	MatSchedulePageUrlGenerator provideMatSchedulePageUrlGenerator( @Named("showingPageUrl") String showingPageUrl ) {
 		return new MatSchedulePageUrlGenerator( showingPageUrl );
 	}
+	
+	protected abstract Class<? extends CountryRepository> countryRepository();
+	
+	protected abstract Class<? extends MatCountryNameRepository> matCountryNameRepository();
 	
 }

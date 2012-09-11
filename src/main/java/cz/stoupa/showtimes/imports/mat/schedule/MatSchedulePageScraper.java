@@ -19,9 +19,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+import cz.stoupa.showtimes.domain.CountryRepository;
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.domain.Translation;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.PageStructurePreconditions;
 import cz.stoupa.showtimes.imports.mat.MatDateTimeParser;
 import cz.stoupa.showtimes.imports.mat.MatMainImport;
@@ -43,10 +44,13 @@ public class MatSchedulePageScraper {
 	private static final Logger logger = LoggerFactory.getLogger( MatSchedulePageScraper.class );
 	
 	private MatDateTimeParser dateTimeParser; 
-
+	/*temporary*/ 
+	private CountryRepository countryRepository;
+	
 	@Inject
-	public MatSchedulePageScraper( MatDateTimeParser dateTimeParser ) {
+	public MatSchedulePageScraper( MatDateTimeParser dateTimeParser, CountryRepository countryRepository ) {
 		this.dateTimeParser = dateTimeParser;
+		this.countryRepository = countryRepository;
 	}
 
 	public int extractShowingYear( Document page ) throws PageStructureException {
@@ -55,8 +59,8 @@ public class MatSchedulePageScraper {
 		return dateTimeParser.parseShowingPageYear( showingMonthYear.text() );
 	}
 
-	public List<ShowingImport> extractAllShowings( Document page ) throws PageStructureException {
-		final List<ShowingImport> allShowings = Lists.newArrayList();
+	public List<Showing.Builder> extractAllShowings( Document page ) throws PageStructureException {
+		final List<Showing.Builder> allShowings = Lists.newArrayList();
 		final int showingYear = extractShowingYear( page );
 		Elements showingDateHeaders = findAllShowingDateHeaders( page );
 		MatShowingDateContentHandler handler = new MatShowingDateContentHandler() {
@@ -71,8 +75,8 @@ public class MatSchedulePageScraper {
 			
 			@Override
 			public void showing( Element showingDiv, MonthDay date ) throws PageStructureException {
-				ShowingImport showing = extractShowing( showingDiv, date.toLocalDate( showingYear ) );
-				allShowings.add( showing );
+				MatMainImport showing = extractShowing( showingDiv, date.toLocalDate( showingYear ) );
+				allShowings.add( showing.toShowingBuilder( countryRepository ) );
 			}
 			
 		};
@@ -162,7 +166,7 @@ public class MatSchedulePageScraper {
 	 * @param date TODO
 	 * @return parsed showing, or null if movieTable contains "no showing" message
 	 */
-	private ShowingImport extractShowing( Element movieMainDiv, LocalDate date ) throws PageStructureException {
+	private MatMainImport extractShowing( Element movieMainDiv, LocalDate date ) throws PageStructureException {
 		logger.debug( "Parsing single showing fragment: {} ", movieMainDiv );		
 		
 		Element tr = PageStructurePreconditions.assertSingleElement( movieMainDiv.getElementsByTag( "tr ") );
@@ -183,12 +187,10 @@ public class MatSchedulePageScraper {
 		LocalDateTime showingDateTime = JodaTimeUtil.newLocalDateTime( date, showingTime );
 		
 		String czechTitle = extractCzechTitle( movieCols );
-		String origTitle = extractOriginalTitle( movieCols );
-		
 		Translation showingTranslation = extractTranslation( movieCols );
 		
 		String externalMovieId = extractExternalMovieId( movieMainDiv );
-		MatMainImport showing = new MatMainImport( showingDateTime, czechTitle, origTitle, showingTranslation, externalMovieId );
+		MatMainImport showing = new MatMainImport( showingDateTime, showingTranslation, czechTitle, externalMovieId );
 		return showing;
 	}
 		
@@ -203,18 +205,6 @@ public class MatSchedulePageScraper {
 		return title;
 	}
 
-	// FIXME: DRY?
-	private String extractOriginalTitle( Elements movieCols ) throws PageStructureException {
-		Element movieTitleCol = movieCols.get( Indexes.FIRST );
-		
-		Element origName = PageStructurePreconditions.assertSingleElement( movieTitleCol.getElementsByTag( "h5" ) );
-		String title = origName.text();
-		logger.debug( "Parsed original movie title: {} ", title);
-		
-		PageStructurePreconditions.checkPageStructure( ! title.isEmpty(), "Original movie title must not be empty." );
-		return title;
-	}
-	
 	private LocalTime extractShowingTime( Elements movieCols ) throws PageStructureException {
 		Element timeCol = movieCols.get( Indexes.SECOND );
 		LocalTime time = dateTimeParser.parseShowingTime( timeCol.text() );

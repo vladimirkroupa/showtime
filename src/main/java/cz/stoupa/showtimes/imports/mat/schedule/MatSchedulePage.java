@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 
 public class MatSchedulePage implements ShowingPage {
@@ -36,7 +36,7 @@ public class MatSchedulePage implements ShowingPage {
 	 * FIXME: improve performance
 	 */
 	@Override
-	public List<ShowingImport> showingsForDate( LocalDate date ) throws PageStructureException {
+	public List<Showing.Builder> showingsForDate( LocalDate date ) throws PageStructureException {
 		if ( ! knownShowingDates().contains( date ) ) {
 			logger.warn( "Page {} doesn't know showings for date {}.", this, date );
 			return Collections.emptyList();
@@ -47,12 +47,12 @@ public class MatSchedulePage implements ShowingPage {
 	/**
 	 * FIXME: unnecessary overhead, but unsure ATM if the method will be useful 
 	 */
-	private List<ShowingImport> findShowingFor( LocalDate date ) throws PageStructureException {
+	private List<Showing.Builder> findShowingFor( LocalDate date ) throws PageStructureException {
 		logger.warn( "Using unoptimized showingsForDate method!" );
 	
-		List<ShowingImport> showingsOnDate = Lists.newArrayList();
-		for ( ShowingImport showing : allShowingsOnPage() ) {
-			LocalDate shownOn = showing.showingDate();  
+		List<Showing.Builder> showingsOnDate = Lists.newArrayList();
+		for ( Showing.Builder showing : allShowingsOnPage() ) {
+			LocalDate shownOn = new Showing( showing ).date();  
 			if ( shownOn.isEqual( date ) ) {
 				showingsOnDate.add( showing );
 			}
@@ -61,7 +61,7 @@ public class MatSchedulePage implements ShowingPage {
 	}
 	
 	@Override
-	public List<ShowingImport> allShowingsOnPage() throws PageStructureException {
+	public List<Showing.Builder> allShowingsOnPage() throws PageStructureException {
 		return pageScraper.extractAllShowings( page );
 	}
 

@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unitils.reflectionassert.ReflectionAssert;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -24,9 +25,13 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import com.harlap.test.http.MockHttpServer.Method;
 
+import cz.stoupa.showtimes.domain.CountryRepository;
+import cz.stoupa.showtimes.domain.Movie;
+import cz.stoupa.showtimes.domain.Showing;
 import cz.stoupa.showtimes.domain.Translation;
+import cz.stoupa.showtimes.domain.fake.CountryRepositoryFake;
+import cz.stoupa.showtimes.external.ExternalMovieRepository;
 import cz.stoupa.showtimes.imports.PageStructureException;
-import cz.stoupa.showtimes.imports.ShowingImport;
 import cz.stoupa.showtimes.imports.internal.ShowingPage;
 import cz.stoupa.showtimes.testutil.MockHttpServerTest;
 import cz.stoupa.showtimes.testutil.TestResources;
@@ -40,6 +45,7 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	private static final String SHOWINGS_URL = "http://localhost:" + MockHttpServerTest.DEFAULT_PORT;
 	
 	private CinestarPageCreator pageCreator;
+	private CountryRepository countryRepository;
 	private ShowingPage testObject;
 
 	public void initTestObject() {
@@ -47,12 +53,14 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 			@Override
 			protected void configure() {
 				bind( String.class )
-				.annotatedWith( Names.named( "showingPageUrl" ) )
-				.toInstance( SHOWINGS_URL );
+					.annotatedWith( Names.named( "showingPageUrl" ) )
+					.toInstance( SHOWINGS_URL );
+				bind( CountryRepository.class).to( CountryRepositoryFake.class );
 			}
 		};
 		Injector injector = Guice.createInjector( Modules.override( new CinestarModule() ).with( testModule ) );
-		pageCreator = injector.getInstance( CinestarPageCreator.class );		
+		pageCreator = injector.getInstance( CinestarPageCreator.class );
+		countryRepository = injector.getInstance( CountryRepository.class );
 	}
 	
 	@Before
@@ -78,25 +86,25 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 	
 	@Test
 	public void getAllShowingsOnPage() throws PageStructureException {
-		List<ShowingImport> actual = testObject.allShowingsOnPage();
-		assertEquals( expectedShowings(), actual );
+		List<Showing.Builder> actual = testObject.allShowingsOnPage();
+		ReflectionAssert.assertReflectionEquals( expectedShowings(), actual );
 	}
 	
 	@Test
 	public void getShowingsForDate() throws PageStructureException {
-		List<ShowingImport> actual = testObject.showingsForDate( PAGE_SAVED_ON );
-		assertEquals( expectedShowings(), actual );
+		List<Showing.Builder> actual = testObject.showingsForDate( PAGE_SAVED_ON );
+		ReflectionAssert.assertReflectionEquals( expectedShowings(), actual );
 	}
 	
 	@Test
 	public void getShowingsForDate_DifferentDate() throws PageStructureException {
-		List<ShowingImport> actual = testObject.showingsForDate( PAGE_SAVED_ON.plusDays( 1 ) );
-		List<ShowingImport> expected = Collections.emptyList();
-		assertEquals( expected, actual );
+		List<Showing.Builder> actual = testObject.showingsForDate( PAGE_SAVED_ON.plusDays( 1 ) );
+		List<Showing.Builder> expected = Collections.emptyList();
+		ReflectionAssert.assertReflectionEquals( expected, actual );
 	}
 	
-	private List<ShowingImport> expectedShowings() {
-		List<ShowingImport> expected = Lists.newArrayList();
+	private List<Showing.Builder> expectedShowings() {
+		List<Showing.Builder> expected = Lists.newArrayList();
 		expected.add( create( "14:30", "Bez kalhot", Translation.SUBTITLES, "1406" ) );
 		expected.add( create( "17:00", "Bez kalhot", Translation.SUBTITLES, "1406" ) );
 		expected.add( create( "19:20", "Bez kalhot", Translation.SUBTITLES, "1406" ) );
@@ -145,9 +153,13 @@ public class CinestarPageCreatorTest extends MockHttpServerTest {
 		return expected;
 	}
 	
-	private ShowingImport create( String time, String movieTitle, Translation translation, String externalId ) {
+	private Showing.Builder create( String time, String movieTitle, Translation translation, String externalId ) {
 		LocalDateTime dateTime = JodaTimeUtil.newLocalDateTime( PAGE_SAVED_ON, LocalTime.parse( time ) );
-		ShowingImport showing = new CinestarMainImport( dateTime, movieTitle, translation, externalId );
+		Movie.Builder movie = new Movie.Builder().addTitle( countryRepository.czechRepublic(), movieTitle ).addExternalId( ExternalMovieRepository.CINESTAR, externalId );
+		Showing.Builder showing = new Showing.Builder()
+			.dateTime( dateTime )
+			.translation( translation )
+			.addMovieBuilder( movie );
 		return showing;
 	}
 	
